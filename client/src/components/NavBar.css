@@ -1,0 +1,45 @@
+.navbar {
+  background-color: #1976d2;
+  padding: 0.5rem 1rem;
+  position: static;
+  width: 100%;
+}
+
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0 1rem;
+}
+
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.navbar-right {
+  display: flex;
+}
+
+.nav-text {
+  font-family: monospace;
+  font-weight: 700;
+  letter-spacing: 0.3rem;
+  font-size: 1rem;
+  white-space: nowrap;
+}
+
+.nav-text.main {
+  font-size: 1.5rem;
+}
+
+.nav-link {
+  color: white;
+  text-decoration: none;
+}
+
+.nav-link:hover {
+  text-decoration: underline;
+}
