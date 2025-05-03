@@ -1,8 +1,20 @@
 var config = require("./db-config.js");
-var mysql = require("mysql");
 
+const { Pool, types } = require("pg");
 config.connectionLimit = 10;
-var connection = mysql.createPool(config);
+console.log("trying to make a connection");
+const connection = new Pool({
+  host: config.host,
+  user: config.user,
+  password: config.password,
+  port: config.port,
+  database: config.database,
+  ssl: {
+    rejectUnauthorized: false,
+  },
+});
+connection.connect((err) => err && console.log(err));
+
 //query 1
 
 const getTeams = async (req, res) => {
@@ -135,7 +147,7 @@ GROUP BY season;
           console.log(err);
           res.json({});
         } else {
-          res.json(data.rows[0]);
+          res.json(data.rows);
         }
       }
     );
@@ -149,7 +161,7 @@ const getRecords = async (req, res) => {
   if (season != -1 && team_id == -1) {
     connection.query(
       `WITH relevant_games as (select * from games WHERE season=${season} 
-), SELECT t.team_id,t.team_name,r.season, SUM(SUM(
+     ) SELECT t.team_id,t.team_name,r.season,SUM(
 CASE 
 WHEN r.home_team_id = t.team_id AND r.home_goals > r.away_goals THEN 1
 WHEN r.away_team_id = t.team_id AND r.away_goals > r.home_goals THEN 1
@@ -158,7 +170,7 @@ END
 ) AS wins,SUM(
 CASE 
 WHEN r.home_team_id = t.team_id AND r.home_goals < r.away_goals THEN 1
-WHEN r.away_team_id = t.team_id AND sg.away_goals < r.home_goals THEN 1
+WHEN r.away_team_id = t.team_id AND r.away_goals < r.home_goals THEN 1
 ELSE 0
 END
 ) AS losses,
@@ -177,14 +189,14 @@ order by wins desc;`,
           console.log(err);
           res.json({});
         } else {
-          res.json(data);
+          res.json(data.rows);
         }
       }
     );
   } else if (season != -1 && team_id != -1) {
     connection.query(
       `WITH relevant_games as (select * from games WHERE season=${season} AND home_team_id=${team_id} OR away_team_id=${team_id}
-), SELECT t.team_id,t.team_name,r.season, SUM(SUM(
+     ) SELECT t.team_id,t.team_name,r.season, SUM(
 CASE 
 WHEN r.home_team_id = t.team_id AND r.home_goals > r.away_goals THEN 1
 WHEN r.away_team_id = t.team_id AND r.away_goals > r.home_goals THEN 1
@@ -193,7 +205,7 @@ END
 ) AS wins,SUM(
 CASE 
 WHEN r.home_team_id = t.team_id AND r.home_goals < r.away_goals THEN 1
-WHEN r.away_team_id = t.team_id AND sg.away_goals < r.home_goals THEN 1
+WHEN r.away_team_id = t.team_id AND r.away_goals < r.home_goals THEN 1
 ELSE 0
 END
 ) AS losses,
@@ -219,7 +231,7 @@ order by wins desc;`,
   } else if (team_id == -1) {
     connection.query(
       `WITH relevant_games as (select * from games
-  ), SELECT t.team_id,t.team_name,r.season, SUM(SUM(
+  ) SELECT t.team_id,t.team_name,r.season, SUM(
   CASE 
   WHEN r.home_team_id = t.team_id AND r.home_goals > r.away_goals THEN 1
   WHEN r.away_team_id = t.team_id AND r.away_goals > r.home_goals THEN 1
@@ -228,7 +240,7 @@ order by wins desc;`,
   ) AS wins,SUM(
   CASE 
   WHEN r.home_team_id = t.team_id AND r.home_goals < r.away_goals THEN 1
-  WHEN r.away_team_id = t.team_id AND sg.away_goals < r.home_goals THEN 1
+  WHEN r.away_team_id = t.team_id AND r.away_goals < r.home_goals THEN 1
   ELSE 0
   END
   ) AS losses,
@@ -254,7 +266,7 @@ order by wins desc;`,
   } else {
     connection.query(
       `WITH relevant_games as (select * from games WHERE home_team_id=${team_id} OR away_team_id=${team_id}
-  ), SELECT t.team_id,t.team_name,r.season, SUM(SUM(
+  ) SELECT t.team_id,t.team_name,r.season, SUM(
   CASE 
   WHEN r.home_team_id = t.team_id AND r.home_goals > r.away_goals THEN 1
   WHEN r.away_team_id = t.team_id AND r.away_goals > r.home_goals THEN 1
@@ -263,7 +275,7 @@ order by wins desc;`,
   ) AS wins,SUM(
   CASE 
   WHEN r.home_team_id = t.team_id AND r.home_goals < r.away_goals THEN 1
-  WHEN r.away_team_id = t.team_id AND sg.away_goals < r.home_goals THEN 1
+  WHEN r.away_team_id = t.team_id AND r.away_goals < r.home_goals THEN 1
   ELSE 0
   END
   ) AS losses,
@@ -297,11 +309,11 @@ const finalToEarlyRatio = async (req, res) => {
       `WITH ge_summary AS (
         SELECT 
 team_id_for,
-SUM(CASE WHENs period = 3 THEN 1 ELSE 0 END) AS final_count,
+SUM(CASE WHEN period = 3 THEN 1 ELSE 0 END) AS final_count,
 SUM(CASE WHEN period < 3 THEN 1 ELSE 0 END) AS early_count
 FROM game_events
 GROUP BY team_id_for
-),
+)
 SELECT t.team_id, t.team_name, G.final_count, G.early_count, (G.final_count * 1.0 / G.early_count) AS final_to_early_ratio
 FROM ge_summary g
 JOIN teams t ON g.team_id_for = t.team_id
@@ -312,7 +324,7 @@ ORDER BY final_to_early_ratio DESC;`,
           console.log(err);
           res.json({});
         } else {
-          res.json(data);
+          res.json(data.rows);
         }
       }
     );
@@ -326,7 +338,7 @@ SUM(CASE WHEN period < 3 THEN 1 ELSE 0 END) as early_count
     FROM game_events
     WHERE team_id_for=${team_id}
     GROUP BY team_id_for
-),
+)
 SELECT t.team_id, t.team_name, G.final_count, G.early_count, (G.final_count * 1.0 / G.early_count) AS final_to_early_ratio
 FROM ge_summary G
 JOIN teams t ON G.team_id_for = t.team_id
