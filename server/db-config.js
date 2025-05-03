@@ -6,4 +6,3 @@ module.exports = {
   password: "ilovethenhl",
   database: "project-db"
 };
-

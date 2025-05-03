@@ -1,5 +1,6 @@
-import React from 'react';
-import { NavLink } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { NavLink, useHistory } from 'react-router-dom';
+import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import './NavBar.css';
 
 function NavText({ href, text, isMain }) {
@@ -13,20 +14,50 @@ function NavText({ href, text, isMain }) {
 }
 
 export default function NavBar() {
-    return (
-      <div className="navbar">
-        <div className="navbar-container">
-          <div className="navbar-left">
-            <NavText href="/" text="NHL Game Statistics" isMain />
-            <NavText href="/players" text="PLAYERS" />
-            <NavText href="/teams" text="TEAMS" />
-            <NavText href="/games" text="GAMES" />
-          </div>
-          <div className="navbar-right">
+  const [user, setUser] = useState(null);
+  const history = useHistory();
+  const auth = getAuth();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setUser(user);
+    });
+
+    return () => unsubscribe();
+  }, [auth]);
+
+  const handleSignOut = async () => {
+    try {
+      await signOut(auth);
+      history.push('/');
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  };
+
+  return (
+    <div className="navbar">
+      <div className="navbar-container">
+        <div className="navbar-left">
+          <NavText href="/" text="NHL Game Statistics" isMain />
+          <NavText href="/players" text="PLAYERS" />
+          <NavText href="/teams" text="TEAMS" />
+          <NavText href="/games" text="GAMES" />
+        </div>
+        <div className="navbar-right">
+          {user ? (
+            <div className="user-menu">
+              <span className="user-email">{user.email}</span>
+              <button onClick={handleSignOut} className="sign-out-button">
+                SIGN OUT
+              </button>
+            </div>
+          ) : (
             <NavText href="/login" text="SIGN IN" />
-          </div>
+          )}
         </div>
       </div>
-    );
-  }
+    </div>
+  );
+}
   
