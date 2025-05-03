@@ -21,6 +21,7 @@
 
 .navbar-right {
   display: flex;
+  align-items: center;
 }
 
 .nav-text {
@@ -42,4 +43,58 @@
 
 .nav-link:hover {
   text-decoration: underline;
+}
+
+.user-menu {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.user-email {
+  color: white;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.sign-out-button {
+  background: none;
+  border: 1px solid white;
+  color: white;
+  padding: 0.5rem 1rem;
+  font-family: monospace;
+  font-weight: 700;
+  letter-spacing: 0.3rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.sign-out-button:hover {
+  background-color: white;
+  color: #1976d2;
+}
+
+@media (max-width: 768px) {
+  .navbar-left {
+    gap: 1rem;
+  }
+  
+  .nav-text {
+    font-size: 0.8rem;
+    letter-spacing: 0.2rem;
+  }
+  
+  .nav-text.main {
+    font-size: 1.2rem;
+  }
+  
+  .user-menu {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .user-email {
+    font-size: 0.8rem;
+  }
 }
