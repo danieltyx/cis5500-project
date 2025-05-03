@@ -14,14 +14,14 @@ export default function App() {
     <div>
       <BrowserRouter>
         <NavBar />
-        <Switch>
+        {<Switch>
           <Route exact path="/" component={HomePage} />
           <Route path="/players" component={PlayersPage} />
           <Route path="/teams" component={TeamsPage} />
           <Route path="/games" component={GamesPage} />
           <Route path="/signup" component={SignupPage} />
           <Route path="/login" component={Login} />
-        </Switch>
+        </Switch> }
       </BrowserRouter>
     </div>
   );
