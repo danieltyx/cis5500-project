@@ -4,6 +4,17 @@ var mysql = require("mysql");
 config.connectionLimit = 10;
 var connection = mysql.createPool(config);
 //query 1
+
+const getTeams = async (req, res) => {
+  connection.query(`SELECT team_id, team_name from teams;`, (err, data) => {
+    if (err) {
+      console.log(err);
+      res.json({});
+    } else {
+      res.json(data.rows);
+    }
+  });
+};
 const offense_x = async (req, res) => {
   const team_id = req.query.team_id || -1;
   if (team_id == -1) {
@@ -189,6 +200,7 @@ const finalToEarlyRatio = async (req, res) => {
 };
 
 module.exports = {
+  getTeams,
   offense_x,
   total_goals,
   avg_goals,
