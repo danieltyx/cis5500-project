@@ -1,0 +1,98 @@
+.games-page {
+  font-family: Arial, sans-serif;
+}
+
+.tabs {
+  display: flex;
+  border-bottom: 2px solid #ccc;
+  margin-bottom: 1rem;
+}
+
+.tab-button {
+  padding: 0.5rem 1rem;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.tab-button.active {
+  border-bottom: 3px solid #1976d2;
+  color: #1976d2;
+}
+
+.content {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.filters {
+  width: 250px;
+  height: 83vh;
+  border-right: 1px solid #000000;
+  padding-right: 1rem;
+}
+
+.filter-box {
+  padding-left: 30px;
+  padding-bottom: 30px;
+  position: relative;
+}
+
+.filter-box input {
+  width: 100%;
+  padding: 0.5rem;
+  box-sizing: border-box;
+}
+
+.suggestions {
+  position: absolute;
+  background: white;
+  border: 1px solid #ccc;
+  width: 100%;
+  max-height: 150px;
+  overflow-y: auto;
+  z-index: 100;
+}
+
+.suggestions div {
+  padding: 0.5rem;
+  cursor: pointer;
+}
+
+.suggestions div:hover {
+  background-color: #eee;
+}
+
+.table-container {
+  flex: 1;
+  padding-left: 1rem;
+}
+
+.checkbox-size {
+  width: 30px;
+}
+
+.checkbox-line {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.checkbox-line input {
+  margin: 0;
+}
+
+.games-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.games-table th,
+.games-table td {
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+}
