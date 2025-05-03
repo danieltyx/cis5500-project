@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import PlayerCard from '../components/PlayerCard';
+import './PlayersPage.css';
+
 const config = require('../config.json');
 
 export default function PlayersPage() {
   const [data, setData] = useState([]);
-  const [selectedPlayerId, setSelectedPlayerId] = useState(null);
   const [name, setName] = useState('');
   const [position, setPosition] = useState('');
   const [nationality, setNationality] = useState('');
@@ -15,7 +15,6 @@ export default function PlayersPage() {
     fetch(`http://${config.server_host}:${config.server_port}/players`)
       .then(res => res.json())
       .then(resJson => {
-        console.log('Player data:', resJson);
         const playersWithId = resJson.rows.map((p) => ({ id: p.player_id, ...p }));
         setData(playersWithId);
       });
@@ -34,39 +33,41 @@ export default function PlayersPage() {
     fetch(`http://${config.server_host}:${config.server_port}/search_players?${queryParams.toString()}`)
       .then(res => res.json())
       .then(resJson => {
-        const playersWithId = resJson.map((p) => ({ id: p.player_id, ...p }));
+        const playersWithId = resJson.rows.map((p) => ({ id: p.player_id, ...p }));
         setData(playersWithId);
       });
   };
 
   return (
     <div className="container">
-      {selectedPlayerId && <PlayerCard playerId={selectedPlayerId} handleClose={() => setSelectedPlayerId(null)} />}
       <h2>Search Players</h2>
       <div className="form-grid">
         <input placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />
-        <input placeholder="Position" value={position} onChange={(e) => setPosition(e.target.value)} />
+        <input placeholder="Position (ex: C, LW, RW, D, G)" value={position} onChange={(e) => setPosition(e.target.value)} />
         <input placeholder="Nationality" value={nationality} onChange={(e) => setNationality(e.target.value)} />
         <input placeholder="Birth City" value={birthCity} onChange={(e) => setBirthCity(e.target.value)} />
-        <div className="slider-container">
-          <label>Height Range (cm): {heightRange[0]} - {heightRange[1]}</label><br />
+        <div className="height-input-container">
+          <label>Height Range (cm):</label><br />
           <input
-            type="range"
+            type="number"
             min="140"
             max="220"
-            step="1"
             value={heightRange[0]}
             onChange={(e) => setHeightRange([parseInt(e.target.value), heightRange[1]])}
+            placeholder="Min Height"
+            style={{ width: '100px', marginRight: '10px' }}
           />
           <input
-            type="range"
+            type="number"
             min="140"
             max="220"
-            step="1"
             value={heightRange[1]}
             onChange={(e) => setHeightRange([heightRange[0], parseInt(e.target.value)])}
+            placeholder="Max Height"
+            style={{ width: '100px' }}
           />
         </div>
+
         <button onClick={search} className="search-button">Search</button>
       </div>
 
@@ -87,11 +88,7 @@ export default function PlayersPage() {
           {data.map(player => (
             <tr key={player.player_id}>
               <td>{player.first_name}</td>
-              <td>
-                <button className="link-button" onClick={() => setSelectedPlayerId(player.player_id)}>
-                  {player.last_name}
-                </button>
-              </td>
+              <td>{player.last_name}</td>
               <td>{player.primary_position}</td>
               <td>{player.nationality}</td>
               <td>{player.birth_city}</td>
