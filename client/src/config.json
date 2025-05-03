@@ -1,4 +1,4 @@
 {
-    "server_host": "localhost",
-    "server_port": "8080"
+    "server_host": "http://project-db.cyoaommac6uq.us-east-1.rds.amazonaws.com",
+    "server_port": "5432"
   }
