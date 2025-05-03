@@ -23,7 +23,7 @@ export default function NavBar() {
             <NavText href="/games" text="GAMES" />
           </div>
           <div className="navbar-right">
-            <NavText href="/signin" text="SIGN IN" />
+            <NavText href="/login" text="SIGN IN" />
           </div>
         </div>
       </div>
