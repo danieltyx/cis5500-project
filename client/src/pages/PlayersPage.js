@@ -12,11 +12,11 @@ export default function PlayersPage() {
   const [heightRange, setHeightRange] = useState([160, 210]);
 
   useEffect(() => {
-    fetch(`http://${config.server_host}/players`)
+    fetch(`http://${config.server_host}:${config.server_port}/players`)
       .then(res => res.json())
       .then(resJson => {
         console.log('Player data:', resJson);
-        const playersWithId = resJson.map((p) => ({ id: p.player_id, ...p }));
+        const playersWithId = resJson.rows.map((p) => ({ id: p.player_id, ...p }));
         setData(playersWithId);
       });
   }, []);

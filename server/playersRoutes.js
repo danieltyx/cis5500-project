@@ -1,11 +1,22 @@
+const { Pool, types } = require('pg');
 var config = require("./db-config.js");
-var mysql = require("mysql");
 
 config.connectionLimit = 10;
-var connection = mysql.createPool(config);
+console.log('trying to make a connection');
+const connection = new Pool({
+  host: config.host,
+  user: config.user,
+  password: config.password,
+  port: config.port,
+  database: config.database,
+  ssl: {
+    rejectUnauthorized: false,
+  },
+});
+connection.connect((err) => err && console.log(err));
 
 // GET /players
-const getPlayers = async (req, res) => {
+const get_players = async (req, res) => {
   connection.query(
     `SELECT player_id, first_name, last_name, nationality, birth_city, primary_position, birth_date, height_cm FROM players;`,
     (err, data) => {
@@ -76,7 +87,7 @@ const searchPlayers = async (req, res) => {
 };
 
 module.exports = {
-  getPlayers,
+  get_players,
   getPlayerById,
   searchPlayers,
 };

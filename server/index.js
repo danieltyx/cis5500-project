@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const config = require('./db-config.js');
 const routes = require('./routes');
-const playerRoutes = require('./playersRoutes');
+const playerRoutes = require('./playersRoutes.js');
 
 const app = express();
 app.use(cors({
@@ -19,16 +19,12 @@ app.get('/author/:type', routes.author);
 // app.get('/teams/players', routes.player_count);
 // app.get('/teams/average-height', routes.average_height);
 // app.get('/games/ties', routes.tied_games);
-app.get('/players', playerRoutes.getPlayers);
+app.get('/players', playerRoutes.get_players);
 app.get('/player/:id', playerRoutes.getPlayerById);
 app.get('/search_players', playerRoutes.searchPlayers);
 
-
-
-
-
-app.listen(config.port, () => {
-  console.log(`Server running at http://${config.host}:${config.port}/`)
+app.listen(config.server_port, () => {
+  console.log(`Server running at http://${config.server_host}:${config.server_port}/`)
 });
 
 module.exports = app;
