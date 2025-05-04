@@ -29,14 +29,14 @@
 
 .filters {
   width: 250px;
-  height: 83vh;
+  height: 80vh;
   border-right: 1px solid #000000;
   padding-right: 1rem;
 }
 
 .filter-box {
   padding-left: 30px;
-  padding-bottom: 30px;
+  padding-bottom: 20px;
   position: relative;
 }
 
@@ -68,6 +68,7 @@
 .table-container {
   flex: 1;
   padding-left: 1rem;
+  height: 85vh;
 }
 
 .checkbox-size {
@@ -87,7 +88,8 @@
 
 .games-table {
   width: 100%;
-  border-collapse: collapse;
+  max-height: 85vh;
+  overflow-y: auto;
 }
 
 .games-table th,
@@ -95,4 +97,12 @@
   padding: 0.5rem 1rem;
   border-bottom: 1px solid #ddd;
   text-align: left;
+  max-height: 5rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.search-button {
+  margin-right: 1rem;
 }
