@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import GamesTable from '../components/GamesTable';
+import GamesFilter from '../components/GamesFilter';
+import GameShotTypes from '../components/GameShotTypes';
 import '../style/GamesPage.css';
 const config = require('../config.json');
 
 const TABS = ['Find Games', 'Shot Analysis', 'Lopsided Games'];
-const matchTypes = ['R', 'P'];
-const justLoaded = true;
 
 function GamesPage() {
   const [selectedTab, setSelectedTab] = useState(TABS[0]);
@@ -18,9 +18,7 @@ function GamesPage() {
     dateRangeEnd: ''
   });
 
-  const [allSeasons, setAllSeasons] = useState([]);
   const [allTeams, setAllTeams] = useState([]);
-  const [seasonSuggestions, setSeasonSuggestions] = useState([]);
   const [homeSuggestions, setHomeSuggestions] = useState([]);
   const [awaySuggestions, setAwaySuggestions] = useState([]);
   const [currGames, setCurrGames] = useState([]);
@@ -82,12 +80,6 @@ function GamesPage() {
         const teamNames = teams.map(team => team.team_name);
         setAllTeams(teamNames);
       });
-
-    fetch(`http://${config.server_host}:${config.server_port}/seasons`)
-      .then(res => res.json())
-      .then(seasons => {
-        setAllSeasons(seasons);
-      });
   }, []);
 
   return (
@@ -106,113 +98,20 @@ function GamesPage() {
 
       {selectedTab === 'Find Games' && (
         <div className="content">
-          <div className="filters">
-            <div className="filter-box">
-              <label><b>Season</b></label>
-              <input
-                value={filters.season}
-                onChange={e => {
-                  handleFilterChange('season', e.target.value);
-                  setSeasonSuggestions(filterSuggestions(e.target.value, allSeasons));
-                }}
-                onBlur={() => setTimeout(() => setSeasonSuggestions([]), 150)}
-              />
-              {seasonSuggestions.length > 0 && (
-                <div className="suggestions">
-                  {seasonSuggestions.map((s, i) => (
-                    <div key={i} onClick={() => handleFilterChange('season', s)}>
-                      {s}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            <div className="filter-box">
-              <label><b>Home Team</b></label>
-              <input
-                value={filters.homeTeam}
-                onChange={e => {
-                  handleFilterChange('homeTeam', e.target.value);
-                  setHomeSuggestions(filterSuggestions(e.target.value, allTeams));
-                }}
-                onBlur={() => setTimeout(() => setHomeSuggestions([]), 150)}
-              />
-              {homeSuggestions.length > 0 && (
-                <div className="suggestions">
-                  {homeSuggestions.map((t, i) => (
-                    <div key={i} onClick={() => handleFilterChange('homeTeam', t)}>
-                      {t}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            <div className="filter-box">
-              <label><b>Away Team</b></label>
-              <input
-                value={filters.awayTeam}
-                onChange={e => {
-                  handleFilterChange('awayTeam', e.target.value);
-                  setAwaySuggestions(filterSuggestions(e.target.value, allTeams));
-                }}
-                onBlur={() => setTimeout(() => setAwaySuggestions([]), 150)}
-              />
-              {awaySuggestions.length > 0 && (
-                <div className="suggestions">
-                  {awaySuggestions.map((t, i) => (
-                    <div key={i} onClick={() => handleFilterChange('awayTeam', t)}>
-                      {t}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            <div className="filter-box">
-              <label><b>Match Type</b></label>
-              {matchTypes.map(type => (
-                <div key={type} className="checkbox-line">
-                  <div className='checkbox-size'>
-                    <input
-                      type="checkbox"
-                      checked={filters.type.includes(type)}
-                      onChange={() => toggleMatchType(type)}
-                    />
-                  </div>
-                  <span>{type}</span>
-                </div>
-              ))}
-            </div>
-
-            <div className="filter-box">
-              <label><b>Date Range Start</b></label>
-              <input
-                type="date"
-                value={filters.dateRangeStart}
-                onChange={e => handleFilterChange('dateRangeStart', e.target.value)}
-              />
-            </div>
-
-            <div className="filter-box">
-              <label><b>Date Range End</b></label>
-              <input
-                type="date"
-                value={filters.dateRangeEnd}
-                onChange={e => handleFilterChange('dateRangeEnd', e.target.value)}
-              />
-            </div>
-
-            <div className="filter-box">
-              <button className="search-button" onClick={() => handleSearch(currPage)}>
-                Search
-              </button>
-              <button className="search-button" onClick={() => clearFilter()}>
-                Clear Filter
-              </button>
-            </div>
-          </div>
+          <GamesFilter
+            filters={filters}
+            allTeams={allTeams}
+            homeSuggestions={homeSuggestions}
+            awaySuggestions={awaySuggestions}
+            handleFilterChange={handleFilterChange}
+            toggleMatchType={toggleMatchType}
+            filterSuggestions={filterSuggestions}
+            setHomeSuggestions={setHomeSuggestions}
+            setAwaySuggestions={setAwaySuggestions}
+            handleSearch={handleSearch}
+            clearFilter={clearFilter}
+            currPage={currPage}
+          />
 
           <div className="table-container">
             <GamesTable games={currGames}/>
@@ -226,12 +125,17 @@ function GamesPage() {
               <span>Page {currPage}</span>
               <button
                 onClick={() => handleSearch(currPage + 1)}
-                disabled={currGames.length < 15} // disable if fewer than 20 games returned
+                disabled={currGames.length < 15}
               >
                 Next
               </button>
             </div>
           </div>
+        </div>
+      )}
+      {selectedTab === 'Shot Analysis' && (
+        <div>
+          <GameShotTypes/>
         </div>
       )}
     </div>

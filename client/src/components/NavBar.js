@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { NavLink, useHistory } from 'react-router-dom';
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
-import './NavBar.css';
+import '../style/NavBar.css';
 
 function NavText({ href, text, isMain }) {
   return (

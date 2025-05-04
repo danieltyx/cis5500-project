@@ -14,7 +14,8 @@
     "react-dropdown": "^1.6.4",
     "react-router-dom": "^5.3.4",
     "react-scripts": "^5.0.1",
-    "react-slider": "^2.0.6"
+    "react-slider": "^2.0.6",
+    "recharts": "^2.15.3"
   },
   "scripts": {
     "start": "react-scripts start",

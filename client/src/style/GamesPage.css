@@ -106,3 +106,61 @@
 .search-button {
   margin-right: 1rem;
 }
+
+.shot-type {
+  padding-left: 30px;
+  max-height: 85vh;
+  overflow: auto;
+}
+
+.shot-performance-heading {
+  margin-top: 20px;
+}
+
+.shot-analysis-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  max-height: 95vh;
+  overflow-y: auto;
+}
+
+.shots-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  background-color: #fff;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.shots-table thead {
+  background-color: #f4f6f8;
+  text-align: left;
+}
+
+.shots-table th,
+.shots-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.shots-table th {
+  font-weight: 600;
+  color: #333;
+}
+
+.shots-table tbody tr:hover {
+  background-color: #f9f9f9;
+}
+
+.shots-table td {
+  color: #444;
+}
+
+.shots-table td:last-child,
+.shots-table th:last-child {
+  border-right: none;
+}

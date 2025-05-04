@@ -2,7 +2,6 @@ var config = require("./db-config.js");
 
 const { Pool, types } = require("pg");
 config.connectionLimit = 10;
-console.log("trying to make a connection");
 const connection = new Pool({
   host: config.host,
   user: config.user,

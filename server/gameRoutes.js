@@ -57,18 +57,47 @@ const getGames = async (req, res) => {
   });
 };
 
-const getSeasons = async (req, res) => {
-  connection.query(`SELECT DISTINCT season from games;`, (err, data) => {
+const getShotTypeStats = (req, res) => {
+  connection.query(`
+    SELECT 
+        ge.secondaryType AS shot_type,
+        SUM(CASE 
+          WHEN ge.event = 'Shot' AND 
+            ((g.home_goals > g.away_goals AND ge.team_id_for = g.home_team_id) OR 
+              (g.away_goals > g.home_goals AND ge.team_id_for = g.away_team_id))
+          THEN 1 ELSE 0 END) AS winner_shots,
+        SUM(CASE 
+          WHEN ge.event = 'Goal' AND 
+            ((g.home_goals > g.away_goals AND ge.team_id_for = g.home_team_id) OR 
+              (g.away_goals > g.home_goals AND ge.team_id_for = g.away_team_id))
+          THEN 1 ELSE 0 END) AS winner_goals,
+        SUM(CASE 
+          WHEN ge.event = 'Shot' AND 
+              ((g.home_goals < g.away_goals AND ge.team_id_for = g.home_team_id) OR 
+                (g.away_goals < g.home_goals AND ge.team_id_for = g.away_team_id))
+          THEN 1 ELSE 0 END) AS loser_shots,
+        SUM(CASE 
+          WHEN ge.event = 'Goal' AND 
+                ((g.home_goals < g.away_goals AND ge.team_id_for = g.home_team_id) OR 
+                (g.away_goals < g.home_goals AND ge.team_id_for = g.away_team_id))
+          THEN 1 ELSE 0 END) AS loser_goals
+    FROM game_events ge
+    JOIN games g ON ge.game_id = g.game_id
+    WHERE (ge.event = 'Shot' OR ge.event = 'Goal')
+      AND ge.secondaryType IS NOT NULL
+      AND ge.secondaryType != 'NA'
+    GROUP BY ge.secondaryType;
+`, (err, results) => {
     if (err) {
-      console.log(err);
-      res.json({});
+      console.error(err);
+      res.status(500).json({ error: "Query failed" });
     } else {
-      res.json(data.rows);
+      res.json(results);
     }
   });
 };
 
 module.exports = {
   getGames,
-  getSeasons
+  getShotTypeStats
 };

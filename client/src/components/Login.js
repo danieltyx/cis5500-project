@@ -9,7 +9,7 @@ import {
   FacebookAuthProvider,
   signInWithPopup
 } from "firebase/auth";
-import './Login.css';
+import '../style/Login.css';
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,

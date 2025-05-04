@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import './PlayersPage.css';
+import '../style/PlayersPage.css';
 
 const config = require('../config.json');
 const TABS = ['Search Players', 'Nationality & Position Summary'];
