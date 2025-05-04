@@ -21,8 +21,8 @@ app.get('/author/:type', routes.author);
 // app.get('/teams/average-height', routes.average_height);
 // app.get('/games/ties', routes.tied_games);
 app.get('/players', playerRoutes.get_players);
-app.get('/player/:id', playerRoutes.getPlayerById);
 app.get('/search_players', playerRoutes.searchPlayers);
+app.get('/nationality_summary', playerRoutes.getNationalitySummary);
 app.get('/games', gameRoutes.get_games);
 
 app.listen(config.server_port, () => {
