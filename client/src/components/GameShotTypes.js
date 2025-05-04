@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import '../style/GamesPage.css';
+import '../style/GameShotTypes.css';
 
 const config = require('../config.json');
 

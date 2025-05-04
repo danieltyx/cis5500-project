@@ -541,6 +541,49 @@ const getShotTypeStats = (req, res) => {
   });
 };
 
+const getLopsidedGames = (req, res) => {
+  // query 10
+  connection.query(`
+    WITH goal_diffs AS (
+      SELECT 
+        g.*, 
+        ABS(g.home_goals - g.away_goals) AS goal_diff,
+        t1.team_name AS home_team_name,
+        t2.team_name AS away_team_name
+      FROM games g
+      INNER JOIN teams t1 ON t1.team_id = g.home_team_id
+      INNER JOIN teams t2 ON t2.team_id = g.away_team_id
+    ),
+    max_diff AS (
+      SELECT MAX(goal_diff) / 2.0 AS max_diff FROM goal_diffs
+    ),
+    shots AS (
+      SELECT 
+        ge.game_id,
+        SUM(CASE WHEN ge.team_id_for = g.home_team_id THEN 1 ELSE 0 END) AS home_shots,
+        SUM(CASE WHEN ge.team_id_for = g.away_team_id THEN 1 ELSE 0 END) AS away_shots
+      FROM game_events ge
+      JOIN games g ON ge.game_id = g.game_id
+      WHERE ge.event = 'Shot'
+      GROUP BY ge.game_id
+    )
+    SELECT 
+      gd.game_id, gd.season, gd.home_team_name, gd.away_team_name, gd.home_goals, gd.away_goals, gd.goal_diff, s.home_shots, s.away_shots
+    FROM goal_diffs gd
+    JOIN shots s ON gd.game_id = s.game_id
+    WHERE gd.goal_diff >= (SELECT max_diff FROM max_diff)
+    ORDER BY gd.goal_diff DESC;
+
+`, (err, results) => {
+    if (err) {
+      console.error(err);
+      res.status(500).json({ error: "Query failed" });
+    } else {
+      res.json(results);
+    }
+  });
+};
+
 // The exported functions, which can be accessed in index.js.
 module.exports = {
   get_players,
@@ -553,5 +596,6 @@ module.exports = {
   getRecords,
   finalToEarlyRatio,
   getGames,
-  getShotTypeStats
+  getShotTypeStats,
+  getLopsidedGames
 }

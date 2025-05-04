@@ -1,0 +1,56 @@
+.most-lopsided-games {
+  margin: 2rem 0;
+  padding: 1rem;
+  background: #fafafa;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.lopsided-games-heading {
+  margin-top: 0px;
+}
+
+.heading {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.lopsided-body {
+  max-height: 67vh; 
+  overflow-y: scroll;
+  margin-right: -15px;
+  padding-right: -2px;
+}
+
+.lopsided-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+
+.lopsided-table th,
+.lopsided-table td {
+  border: 1px solid #ddd;
+  padding: 0.75rem;
+  text-align: center;
+  word-wrap: break-word;
+  width: 16.67%;
+}
+
+.lopsided-table th {
+  background-color: #f4f4f4;
+  font-weight: 600;
+}
+
+.lopsided-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.lopsided-container {
+  width: 100%;
+}
+
+.lopsided-header {
+  background-color: #f7f7f7;
+}

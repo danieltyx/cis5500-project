@@ -11,13 +11,14 @@ app.use(cors({
 // We use express to define our various API endpoints and
 // provide their handlers that we implemented in routes.js
 
-app.get('/author/:type', routes.author);
 app.get('/players', routes.get_players);
 app.get('/search_players', routes.searchPlayers);
+app.get('/nationality_summary', routes.getNationalitySummary);
 app.get('/teams', routes.getTeams);
 app.get('/find_games', routes.getGames);
 app.get('/shot_types', routes.getShotTypeStats);
-app.get('/nationality_summary', routes.getNationalitySummary);
+app.get('/lopsided_games', routes.getLopsidedGames);
+
 
 app.listen(config.server_port, () => {
   console.log(`Server running at http://${config.server_host}:${config.server_port}/`)

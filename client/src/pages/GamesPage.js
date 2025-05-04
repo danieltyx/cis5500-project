@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import GamesTable from '../components/GamesTable';
 import GamesFilter from '../components/GamesFilter';
 import GameShotTypes from '../components/GameShotTypes';
+import LopsidedGames from '../components/LopsidedGames';
 import '../style/GamesPage.css';
 const config = require('../config.json');
 
@@ -136,6 +137,11 @@ function GamesPage() {
       {selectedTab === 'Shot Analysis' && (
         <div>
           <GameShotTypes/>
+        </div>
+      )}
+      {selectedTab === 'Lopsided Games' && (
+        <div>
+          <LopsidedGames/>
         </div>
       )}
     </div>
