@@ -22,11 +22,11 @@ app.get('/author/:type', routes.author);
 // app.get('/teams/average-height', routes.average_height);
 // app.get('/games/ties', routes.tied_games);
 app.get('/players', playerRoutes.get_players);
-app.get('/player/:id', playerRoutes.getPlayerById);
 app.get('/search_players', playerRoutes.searchPlayers);
 app.get('/find_games', gameRoutes.getGames);
 app.get('/teams', teamRoutes.getTeams);
 app.get('/seasons', gameRoutes.getSeasons);
+app.get('/nationality_summary', playerRoutes.getNationalitySummary);
 
 app.listen(config.server_port, () => {
   console.log(`Server running at http://${config.server_host}:${config.server_port}/`)

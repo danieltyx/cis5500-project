@@ -4,5 +4,7 @@ module.exports = {
   port: "5432",
   user : "ilovethenhl",
   password: "ilovethenhl",
-  database: "project-db"
+  database: "postgres",
+  server_host: "localhost",
+  server_port: "8080"
 };
