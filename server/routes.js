@@ -127,6 +127,7 @@ const getTeams = async (req, res) => {
     }
   });
 };
+
 const offense_x = async (req, res) => {
   const team_id = req.query.team_id || -1;
   if (team_id == -1) {
@@ -573,7 +574,6 @@ const getLopsidedGames = (req, res) => {
     JOIN shots s ON gd.game_id = s.game_id
     WHERE gd.goal_diff >= (SELECT max_diff FROM max_diff)
     ORDER BY gd.goal_diff DESC;
-
 `, (err, results) => {
     if (err) {
       console.error(err);
