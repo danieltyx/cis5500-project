@@ -86,11 +86,11 @@ const ShotTypeStats = () => {
           <XAxis dataKey="shot_type" tick={{ fontSize: 10 }} />
           <YAxis
             tick={{ fontSize: 10 }}
-            domain={[0, isShots ? 14000 : 4000]}
+            domain={[0, isShots ? 14000 : 2000]}
             ticks={
               isShots
                 ? [0, 2000, 4000, 6000, 8000, 10000, 12000, 14000]
-                : [0, 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000]
+                : [0, 500, 1000, 1500, 2000]
             }
           />
           <Legend wrapperStyle={{ fontSize: 10 }} />
