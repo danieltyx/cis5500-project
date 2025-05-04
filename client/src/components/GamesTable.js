@@ -18,8 +18,8 @@ export default function GamesTable({ games }) {
           <tr
             key={game.game_id}
           >
-            <td>{game.season}</td>
-            <td>{game.date_time_gmt}</td>
+            <td>{String(game.season).substring(0, 4)}/{String(game.season).substring(4)}</td>
+            <td>{new Date(game.date_time_gmt).toDateString()} {new Date(game.date_time_gmt).toLocaleTimeString()}</td>
             <td>{game.enum}</td>
             <td>{game.home_team_name}</td>
             <td>{game.away_team_name}</td>

@@ -1,30 +1,30 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import GamesTable from '../components/GamesTable';
 import '../style/GamesPage.css';
 const config = require('../config.json');
 
 const TABS = ['Find Games', 'Shot Analysis', 'Lopsided Games'];
-const matchTypes = ['Regular', 'Playoffs'];
-
-const allSeasons = ['2021', '2022', '2023'];
-const allTeams = ['Philadelphia Flyers', 'Pittsburgh Penguins', 'Boston Bruins', 'NY Rangers'];
+const matchTypes = ['R', 'P'];
+const justLoaded = true;
 
 function GamesPage() {
   const [selectedTab, setSelectedTab] = useState(TABS[0]);
   const [filters, setFilters] = useState({
     season: '',
-    type: ['Regular', 'Playoffs'],
+    type: ['R', 'P'],
     homeTeam: '',
     awayTeam: '',
     dateRangeStart: '',
-    dateRangeEnd: '',
+    dateRangeEnd: ''
   });
 
+  const [allSeasons, setAllSeasons] = useState([]);
+  const [allTeams, setAllTeams] = useState([]);
   const [seasonSuggestions, setSeasonSuggestions] = useState([]);
   const [homeSuggestions, setHomeSuggestions] = useState([]);
   const [awaySuggestions, setAwaySuggestions] = useState([]);
-  const [allGames, setAllGames] = useState([]);
-  const [filteredGames, setFilteredGames] = useState([]);
+  const [currGames, setCurrGames] = useState([]);
+  const [currPage, setCurrPage] = useState(1);
 
   const handleFilterChange = (field, value) => {
     setFilters(prev => ({ ...prev, [field]: value }));
@@ -42,30 +42,53 @@ function GamesPage() {
   const filterSuggestions = (input, source) =>
     source.filter(option => option.toLowerCase().includes(input.toLowerCase()));
 
-  const handleSearch = () => {
-    const filtered = allGames.filter(game => {
-      return (
-        (filters.season === '' || game.season === filters.season) &&
-        (filters.type.includes(game.type)) &&
-        (filters.homeTeam === '' || game.homeTeam.toLowerCase().includes(filters.homeTeam.toLowerCase())) &&
-        (filters.awayTeam === '' || game.awayTeam.toLowerCase().includes(filters.awayTeam.toLowerCase())) &&
-        (!filters.dateRangeStart || new Date(game.date) >= new Date(filters.dateRangeStart)) &&
-        (!filters.dateRangeEnd || new Date(game.date) <= new Date(filters.dateRangeEnd))
-      );
+  const handleSearch = (page) => {
+    if (filters.type.length === 0) {
+      alert("Please select a type of match.");
+    } else {
+      const queryParams = new URLSearchParams(filters);
+
+      setCurrPage(page);
+      fetch(`http://${config.server_host}:${config.server_port}/find_games?page=${page}&${queryParams.toString()}`)
+        .then(res => res.json())
+        .then(games => {
+          setCurrGames(games);
+      });
+    }
+  }
+
+  const clearFilter = () => {
+    setFilters({
+      season: '',
+      type: ['R', 'P'],
+      homeTeam: '',
+      awayTeam: '',
+      dateRangeStart: '',
+      dateRangeEnd: ''
     });
-    setFilteredGames(filtered);
-  };
-  
+  }
+
+  const justLoadedRef = useRef(true);
 
   useEffect(() => {
-    fetch(`http://${config.server_host}:${config.server_port}/games`)
+    if (justLoadedRef.current) {
+      handleSearch(1);
+      justLoadedRef.current = false;
+    }
+
+    fetch(`http://${config.server_host}:${config.server_port}/teams`)
       .then(res => res.json())
-      .then(games => {
-        console.log(games[0]);
-        setAllGames(games);
-        setFilteredGames(games);
+      .then(teams => {
+        const teamNames = teams.map(team => team.team_name);
+        setAllTeams(teamNames);
       });
-  }, []);  
+
+    fetch(`http://${config.server_host}:${config.server_port}/seasons`)
+      .then(res => res.json())
+      .then(seasons => {
+        setAllSeasons(seasons);
+      });
+  }, []);
 
   return (
     <div className="games-page">
@@ -182,14 +205,32 @@ function GamesPage() {
             </div>
 
             <div className="filter-box">
-              <button className="search-button" onClick={handleSearch}>
+              <button className="search-button" onClick={() => handleSearch(currPage)}>
                 Search
+              </button>
+              <button className="search-button" onClick={() => clearFilter()}>
+                Clear Filter
               </button>
             </div>
           </div>
 
           <div className="table-container">
-            <GamesTable games={filteredGames}/>
+            <GamesTable games={currGames}/>
+            <div className="pagination-controls" style={{ marginTop: '1rem', display: 'flex', justifyContent: 'center', gap: '1rem' }}>
+              <button
+                onClick={() => handleSearch(Math.max(currPage - 1, 1))}
+                disabled={currPage === 1}
+              >
+                Previous
+              </button>
+              <span>Page {currPage}</span>
+              <button
+                onClick={() => handleSearch(currPage + 1)}
+                disabled={currGames.length < 15} // disable if fewer than 20 games returned
+              >
+                Next
+              </button>
+            </div>
           </div>
         </div>
       )}
