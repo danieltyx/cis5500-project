@@ -15,11 +15,10 @@
     align-items: end;
   }
   
-
   .height-input-container {
     display: flex;
     flex-direction: column;
-    grid-column: span 1; 
+    grid-column: span 1;
   }
   
   .height-input-container label {
@@ -27,12 +26,18 @@
     font-weight: 500;
   }
   
-  .height-input-container input {
-    margin-bottom: 6px;
+  .height-inputs-row {
+    display: flex;
+    gap: 10px;
   }
   
+  .height-inputs-row input {
+    width: 80px;
+  }
+
   .search-button {
-    height: 40px;
+    height: 36px;
+    width: 100px;
     align-self: start;
     cursor: pointer;
     background-color: #f0f0f0;
@@ -40,6 +45,8 @@
     border-radius: 4px;
     font-weight: bold;
   }
+  
+  
   
   .player-table {
     width: 100%;
@@ -59,3 +66,24 @@
     font-weight: bold;
   }
   
+  .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    margin-top: 20px;
+  }
+  
+  .pagination button {
+    padding: 6px 12px;
+    font-weight: bold;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    background-color: #f7f7f7;
+    cursor: pointer;
+  }
+  
+  .pagination button:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
