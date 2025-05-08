@@ -1,5 +1,4 @@
 {
   "server_host": "localhost",
-  "server_port": "8080",
-  "host": "http://localhost:8080"
+  "server_port": "8080"
 }
