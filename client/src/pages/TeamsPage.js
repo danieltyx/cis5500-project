@@ -35,7 +35,7 @@ function TeamsPage() {
   async function getTeamsData() {
     try {
       const data = await fetch(
-        `${config.host}:${config.port}/teams${
+        `${config.host}/teams${
           teamFilter ? "?team_id=" + teamID : ""
         }`
       );
@@ -54,7 +54,7 @@ function TeamsPage() {
   async function getAvgOffenseX() {
     try {
       const data = await fetch(
-        `${config.host}:${config.port}/teams/offense-x${
+        `${config.host}/teams/offense-x${
           teamFilter ? "?team_id=" + teamID : ""
         }`
       );
@@ -71,7 +71,7 @@ function TeamsPage() {
   async function getTotalGoals() {
     try {
       const data = await fetch(
-        `${config.host}:${config.port}/teams/total-goals${
+        `${config.host}/teams/total-goals${
           teamFilter ? "?team_id=" + teamID : ""
         }`
       );
@@ -88,7 +88,7 @@ function TeamsPage() {
   async function getAvgGoals() {
     try {
       const data = await fetch(
-        `${config.host}:${config.port}/teams/avg-goals${
+        `${config.host}/teams/avg-goals${
           teamFilter ? "?team_id=" + teamID : ""
         }`
       );
@@ -104,7 +104,7 @@ function TeamsPage() {
   }
   async function getRecords() {
     try {
-      let fetchUrl = `${config.host}:${config.port}/teams/records${
+      let fetchUrl = `${config.host}/teams/records${
         teamFilter ? "?team_id=" + teamID : ""
       }`;
       if (seasonFilter && teamFilter) {
@@ -126,7 +126,7 @@ function TeamsPage() {
   async function getFinalToEarlyRatio() {
     try {
       const data = await fetch(
-        `${config.host}:${config.port}/teams/final-to-early-ratio${
+        `${config.host}/teams/final-to-early-ratio${
           teamFilter ? "?team_id=" + teamID : ""
         }`
       );

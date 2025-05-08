@@ -1,8 +1,6 @@
 const config = {
-  host: "https://cis5500-project-server.vercel.app",
-  port: "",  // No port needed for HTTPS
-  server_host: "cis5500-project-server.vercel.app",
-  server_port: ""  // No port needed for HTTPS
+  host: "/api",
+  server_host: "cis5500-project-server.vercel.app"
 };
 
 export default config; 
