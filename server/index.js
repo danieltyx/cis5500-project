@@ -4,16 +4,20 @@ const config = require('./db-config.js');
 const routes = require('./routes');
 
 const app = express();
+
+// Enable CORS for all routes
 app.use(cors({
-  origin: [
-    'http://localhost:3000',
-    'https://cis5500-project.vercel.app',
-    'https://*.vercel.app'
-  ],
+  origin: '*',  // Allow all origins in development
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
+// Add request logging
+app.use((req, res, next) => {
+  console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
+  next();
+});
 
 // Root route handler
 app.get('/', (req, res) => {
@@ -22,7 +26,6 @@ app.get('/', (req, res) => {
 
 // We use express to define our various API endpoints and
 // provide their handlers that we implemented in routes.js
-
 app.get('/players', routes.get_players);
 app.get('/search_players', routes.searchPlayers);
 app.get('/nationality_summary', routes.getNationalitySummary);
@@ -33,13 +36,18 @@ app.get('/lopsided_games', routes.getLopsidedGames);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ error: 'Something went wrong!' });
+  console.error('Error:', err);
+  res.status(500).json({ 
+    error: 'Something went wrong!',
+    message: err.message,
+    stack: process.env.NODE_ENV === 'development' ? err.stack : undefined
+  });
 });
 
 // 404 handler
 app.use((req, res) => {
-  res.status(404).json({ error: 'Not Found' });
+  console.log('404 Not Found:', req.url);
+  res.status(404).json({ error: 'Not Found', path: req.url });
 });
 
 // Only start the server if we're not in a serverless environment

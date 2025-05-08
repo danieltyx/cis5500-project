@@ -21,6 +21,8 @@ function TeamsPage() {
   const [teamFilter, setTeamFilter] = useState(false);
   const [seasonFilter, setSeasonFilter] = useState(false);
   const [selectedSeason, setSelectedSeason] = useState("20002001");
+  const [error, setError] = useState(null);
+
   const generateSeasons = () => {
     const seasons = [];
     for (let year = 2000; year <= 2019; year++) {
@@ -32,14 +34,23 @@ function TeamsPage() {
   };
 
   const seasons = generateSeasons();
+
   async function getTeamsData() {
     try {
-      const data = await fetch(
+      console.log('Fetching from:', `${config.host}/teams${teamFilter ? "?team_id=" + teamID : ""}`);
+      const response = await fetch(
         `${config.host}/teams${
           teamFilter ? "?team_id=" + teamID : ""
         }`
       );
-      const parsedData = await data.json();
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const parsedData = await response.json();
+      console.log('Received data:', parsedData);
+      
       if (!Array.isArray(parsedData)) {
         setPageData([parsedData]);
         return [parsedData];
@@ -48,9 +59,12 @@ function TeamsPage() {
         return parsedData;
       }
     } catch (err) {
-      console.log(err);
+      console.error('Error fetching teams:', err);
+      setError(err.message);
+      return [];
     }
-  } //TODO: write all the function gets for api shit, make the pretty table, and add a useEffect for the tab shit
+  }
+
   async function getAvgOffenseX() {
     try {
       const data = await fetch(
