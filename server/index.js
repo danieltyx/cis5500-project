@@ -10,7 +10,9 @@ app.use(cors({
     'https://cis5500-project.vercel.app',
     'https://*.vercel.app'
   ],
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 // We use express to define our various API endpoints and

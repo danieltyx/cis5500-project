@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "../style/TeamsPage.css";
+import config from "../config";
 // import { paste } from "@testing-library/user-event/dist/paste";
-const config = {
-  host: "http://localhost",
-  port: 8080,
-};
+
 function TeamsPage() {
   const TABS = [
     "Get Teams",
