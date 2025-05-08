@@ -3,10 +3,11 @@ import GamesTable from '../components/GamesTable';
 import GamesFilter from '../components/GamesFilter';
 import GameShotTypes from '../components/GameShotTypes';
 import LopsidedGames from '../components/LopsidedGames';
+import ExperiencedWinnerLocations from '../components/ExperiencedWinnerLocations';
 import '../style/GamesPage.css';
 import config from '../config';
 
-const TABS = ['Find Games', 'Shot Analysis', 'Lopsided Games'];
+const TABS = ['Find Games', 'Shot Analysis', 'Lopsided Games', 'Experienced Winner Locations'];
 
 function GamesPage() {
   const [selectedTab, setSelectedTab] = useState(TABS[0]);
@@ -144,6 +145,11 @@ function GamesPage() {
       {selectedTab === 'Lopsided Games' && (
         <div>
           <LopsidedGames/>
+        </div>
+      )}
+      {selectedTab === 'Experienced Winner Locations' && (
+        <div>
+          <ExperiencedWinnerLocations/>
         </div>
       )}
     </div>

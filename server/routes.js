@@ -584,6 +584,72 @@ const getLopsidedGames = (req, res) => {
   });
 };
 
+const getAvgXYExperiencedWinner = (req, res) => {
+  connection.query(`
+    WITH player_season_counts AS (
+      SELECT player_id
+      FROM player_teams
+      GROUP BY player_id
+      HAVING COUNT(DISTINCT season) >= 8
+    ),
+    filtered_events AS (
+      SELECT
+        ge.event,
+        ge.x,
+        ge.y,
+        ge.game_id,
+        ge.team_id_for,
+        g.season
+      FROM game_events ge
+      JOIN games g ON ge.game_id = g.game_id
+      JOIN player_teams pt ON pt.season = g.season
+      JOIN player_season_counts psc ON pt.player_id = psc.player_id
+    ),
+    team_wins AS (
+      SELECT
+        season,
+        CASE
+          WHEN home_goals > away_goals THEN home_team_id
+          WHEN away_goals > home_goals THEN away_team_id
+        END AS winning_team
+      FROM games
+    ),
+    season_top_teams AS (
+      SELECT season, winning_team
+      FROM (
+        SELECT
+          season,
+          winning_team,
+          COUNT(*) AS wins,
+          RANK() OVER (PARTITION BY season ORDER BY COUNT(*) DESC) AS rank
+        FROM team_wins
+        WHERE winning_team IS NOT NULL
+        GROUP BY season, winning_team
+      ) ranked
+      WHERE rank = 1
+    )
+    SELECT
+      fe.event,
+      AVG(fe.x) AS avg_x,
+      AVG(fe.y) AS avg_y,
+      COUNT(*) AS total_events,
+      MAX(g.date_time_GMT) AS latest_game_time
+    FROM filtered_events fe
+    JOIN season_top_teams stt
+      ON stt.season = fe.season AND stt.winning_team = fe.team_id_for
+    JOIN games g ON fe.game_id = g.game_id
+    GROUP BY fe.event
+    ORDER BY avg_x DESC;
+`, (err, results) => {
+    if (err) {
+      console.error(err);
+      res.status(500).json({ error: "Query failed" });
+    } else {
+      res.json(results);
+    }
+  });
+}
+
 // The exported functions, which can be accessed in index.js.
 module.exports = {
   get_players,
@@ -597,5 +663,6 @@ module.exports = {
   finalToEarlyRatio,
   getGames,
   getShotTypeStats,
-  getLopsidedGames
+  getLopsidedGames,
+  getAvgXYExperiencedWinner
 }
