@@ -5,7 +5,12 @@ const routes = require('./routes');
 
 const app = express();
 app.use(cors({
-  origin: '*',
+  origin: [
+    'http://localhost:3000',
+    'https://cis5500-project.vercel.app',
+    'https://*.vercel.app'
+  ],
+  credentials: true
 }));
 
 // We use express to define our various API endpoints and
@@ -19,9 +24,11 @@ app.get('/find_games', routes.getGames);
 app.get('/shot_types', routes.getShotTypeStats);
 app.get('/lopsided_games', routes.getLopsidedGames);
 
-
-app.listen(config.server_port, () => {
-  console.log(`Server running at http://${config.server_host}:${config.server_port}/`)
-});
+// Only start the server if we're not in a serverless environment
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(config.server_port, () => {
+    console.log(`Server running at http://${config.server_host}:${config.server_port}/`)
+  });
+}
 
 module.exports = app;

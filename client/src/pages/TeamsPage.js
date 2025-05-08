@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../style/TeamsPage.css";
-import { paste } from "@testing-library/user-event/dist/paste";
+// import { paste } from "@testing-library/user-event/dist/paste";
 const config = {
   host: "http://localhost",
   port: 8080,
