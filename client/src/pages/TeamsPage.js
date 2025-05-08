@@ -37,20 +37,21 @@ function TeamsPage() {
 
   async function getTeamsData() {
     try {
-      console.log('Fetching from:', `${config.host}/teams${teamFilter ? "?team_id=" + teamID : ""}`);
-      const response = await fetch(
-        `${config.host}/teams${
-          teamFilter ? "?team_id=" + teamID : ""
-        }`
+      console.log(
+        "Fetching from:",
+        `${config.host}/teams${teamFilter ? "?team_id=" + teamID : ""}`
       );
-      
+      const response = await fetch(
+        `${config.host}/teams${teamFilter ? "?team_id=" + teamID : ""}`
+      );
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      
+
       const parsedData = await response.json();
-      console.log('Received data:', parsedData);
-      
+      console.log("Received data:", parsedData);
+
       if (!Array.isArray(parsedData)) {
         setPageData([parsedData]);
         return [parsedData];
@@ -59,7 +60,7 @@ function TeamsPage() {
         return parsedData;
       }
     } catch (err) {
-      console.error('Error fetching teams:', err);
+      console.error("Error fetching teams:", err);
       setError(err.message);
       return [];
     }
@@ -90,6 +91,7 @@ function TeamsPage() {
         }`
       );
       const parsedData = await data.json();
+      console.log(parsedData);
       if (!Array.isArray(parsedData)) {
         setPageData([parsedData]);
       } else {
@@ -107,6 +109,7 @@ function TeamsPage() {
         }`
       );
       const parsedData = await data.json();
+      console.log(parsedData);
       if (!Array.isArray(parsedData)) {
         setPageData([parsedData]);
       } else {
@@ -187,10 +190,10 @@ function TeamsPage() {
   }, []);
   return (
     <div className="Teams">
-      <div className="pageHeader">
+      <div className="tabs">
         {TABS.map((tab) => (
           <button
-            className={`tabButton${selectedTab === tab ? "selected" : ""}`}
+            className={`tabButton ${selectedTab === tab ? "selected" : ""}`}
             key={tab}
             onClick={() => setSelectedTab(tab)}
           >
@@ -198,77 +201,73 @@ function TeamsPage() {
           </button>
         ))}
       </div>
-      <div className="filters">
-        {teamOkTabs.includes(selectedTab) && (
-          <label>
-            <input
-              type="checkbox"
-              checked={teamFilter}
-              onChange={(e) => setTeamFilter(e.target.checked)}
-            />
-            Team Filter
-          </label>
-        )}
-
-        {teamOkTabs.includes(selectedTab) && teamFilter && (
-          <select
-            value={teamID}
-            onChange={(e) => {
-              setTeamID(Number(e.target.value));
-              console.log("Team ID" + teamID);
-            }}
-          >
-            {teams.map((team) => (
-              <option key={team.team_id} value={team.team_id}>
-                {team.team_name}
-              </option>
-            ))}
-          </select>
-        )}
-        {seasonOkTabs.includes(selectedTab) && (
-          <label>
-            <input
-              type="checkbox"
-              checked={seasonFilter}
-              onChange={(e) => setSeasonFilter(e.target.checked)}
-            />
-            Season Filter
-          </label>
-        )}
-        {seasonOkTabs.includes(selectedTab) && seasonFilter && (
-          <select
-            value={selectedSeason}
-            onChange={(e) => {
-              setSelectedSeason(e.target.value);
-            }}
-          >
-            {seasons.map((season) => (
-              <option key={season} value={season}>
-                {season.slice(0, 4)}-{season.slice(4, 8)}
-              </option>
-            ))}
-          </select>
-        )}
-      </div>
-      {pageData && pageData.length > 0 && (
-        <table>
-          <thead>
-            <tr>
-              {Object.keys(pageData[0]).map((key) => (
-                <th key={key}>{key}</th>
+      <div className="thefilters">
+        <div className="filter-controls">
+          {teamOkTabs.includes(selectedTab) && (
+            <label>
+              Team Filter:
+              <input
+                type="checkbox"
+                checked={teamFilter}
+                onChange={() => setTeamFilter(!teamFilter)}
+              />
+            </label>
+          )}
+          {seasonOkTabs.includes(selectedTab) && (
+            <label>
+              Season Filter:
+              <input
+                type="checkbox"
+                checked={seasonFilter}
+                onChange={() => setSeasonFilter(!seasonFilter)}
+              />
+            </label>
+          )}
+          {teamFilter && teamOkTabs.includes(selectedTab) && (
+            <select value={teamID} onChange={(e) => setTeamID(e.target.value)}>
+              {teams.map((team) => (
+                <option key={team.team_id} value={team.team_id}>
+                  {team.team_name}
+                </option>
               ))}
-            </tr>
-          </thead>
-          <tbody>
-            {pageData.map((item, index) => (
-              <tr key={index}>
-                {Object.keys(item).map((key) => (
-                  <td key={key}>{item[key]}</td>
+            </select>
+          )}
+          {seasonFilter && seasonOkTabs.includes(selectedTab) && (
+            <select
+              value={selectedSeason}
+              onChange={(e) => setSelectedSeason(e.target.value)}
+            >
+              {seasons.map((season) => (
+                <option key={season} value={season}>
+                  {season}
+                </option>
+              ))}
+            </select>
+          )}
+        </div>
+      </div>
+
+      {pageData && pageData.length > 0 && (
+        <div className="tableContainer">
+          <table>
+            <thead>
+              <tr>
+                {Object.keys(pageData[0]).map((key) => (
+                  <th key={key}>{key}</th>
                 ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {pageData.map((item, index) => (
+                <tr key={index}>
+                  {Object.keys(item).map((key) => (
+                    <td key={key}>{item[key]}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );

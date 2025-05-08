@@ -1,39 +1,96 @@
-.pageHeader {
+/* Reset all potential causes of the vertical line */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.Teams {
+  padding-top: 3%;
+  position: relative;
+  overflow: hidden;
+  border: none;
+}
+
+.tabs-container {
   display: flex;
   justify-content: flex-start;
   align-items: center;
   flex-wrap: nowrap;
   gap: 50px;
-  padding-bottom: 20px;
+  border: none;
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.games-page {
+  font-family: Arial, sans-serif;
+}
+
+.tabs {
+  display: flex;
+  border-bottom: 2px solid #ccc;
+  margin-bottom: 1rem;
 }
 
 .tabButton {
-  background: none;
+  padding: 0.5rem 1rem;
   border: none;
-  color: inherit;
-  font: inherit;
-  cursor: pointer;
-  outline: inherit;
-  font-size: 20px;
-  margin: 0 5px;
-}
-
-.tabButton:hover {
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.tabButtonselected {
   background: none;
-  border: none;
-  color: inherit;
-  font: inherit;
   cursor: pointer;
-  outline: inherit;
-  font-size: 20px;
-  text-decoration: underline;
-  text-decoration-color: green;
+  font-weight: bold;
 }
 
-.Teams {
-  padding-top: 3%;
+.tabButton.selected {
+  border-bottom: 3px solid #1976d2;
+  color: #1976d2;
+}
+
+.filters {
+  margin: 10px 0;
+  padding: 10px 0;
+}
+
+.filter-controls {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.filter-controls label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: bold;
+}
+
+.filter-controls select {
+  padding: 5px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.tableContainer {
+  overflow-x: auto;
+  margin-top: 10px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: auto;
+}
+
+th,
+td {
+  padding: 10px;
+  text-align: left;
+  white-space: nowrap;
+  border-bottom: 1px solid #ddd;
 }
