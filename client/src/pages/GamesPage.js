@@ -4,7 +4,7 @@ import GamesFilter from '../components/GamesFilter';
 import GameShotTypes from '../components/GameShotTypes';
 import LopsidedGames from '../components/LopsidedGames';
 import '../style/GamesPage.css';
-const config = require('../config.json');
+import config from '../config';
 
 const TABS = ['Find Games', 'Shot Analysis', 'Lopsided Games'];
 
@@ -48,11 +48,12 @@ function GamesPage() {
       const queryParams = new URLSearchParams(filters);
 
       setCurrPage(page);
-      fetch(`http://${config.server_host}:${config.server_port}/find_games?page=${page}&${queryParams.toString()}`)
+      fetch(`${config.host}/find_games?page=${page}&${queryParams.toString()}`)
         .then(res => res.json())
         .then(games => {
           setCurrGames(games);
-      });
+        })
+        .catch(err => console.error('Error fetching games:', err));
     }
   }
 
@@ -75,12 +76,13 @@ function GamesPage() {
       justLoadedRef.current = false;
     }
 
-    fetch(`http://${config.server_host}:${config.server_port}/teams`)
+    fetch(`${config.host}/teams`)
       .then(res => res.json())
       .then(teams => {
         const teamNames = teams.map(team => team.team_name);
         setAllTeams(teamNames);
-      });
+      })
+      .catch(err => console.error('Error fetching teams:', err));
   }, []);
 
   return (

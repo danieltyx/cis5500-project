@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import '../style/PlayersPage.css';
+import config from '../config';
 
-const config = require('../config.json');
 const TABS = ['Search Players', 'Nationality & Position Summary'];
 
 export default function PlayersPage() {
@@ -19,13 +19,14 @@ export default function PlayersPage() {
   const resultsPerPage = 20;
 
   useEffect(() => {
-    fetch(`http://${config.server_host}:${config.server_port}/players`)
+    fetch(`${config.host}/players`)
       .then(res => res.json())
       .then(resJson => {
         const playersWithId = resJson.rows.map((p) => ({ id: p.player_id, ...p }));
         setData(playersWithId);
         setCurrentPage(1);
-      });
+      })
+      .catch(err => console.error('Error fetching players:', err));
   }, []);
 
   const search = () => {
@@ -39,13 +40,14 @@ export default function PlayersPage() {
       height_high: heightRange[1],
     });
 
-    fetch(`http://${config.server_host}:${config.server_port}/search_players?${queryParams.toString()}`)
+    fetch(`${config.host}/search_players?${queryParams.toString()}`)
       .then(res => res.json())
       .then(resJson => {
         const playersWithId = resJson.rows.map((p) => ({ id: p.player_id, ...p }));
         setData(playersWithId);
         setCurrentPage(1);
-      });
+      })
+      .catch(err => console.error('Error searching players:', err));
   };
 
   const totalPages = Math.ceil(data.length / resultsPerPage);
@@ -66,9 +68,10 @@ export default function PlayersPage() {
       offset: summaryPage * summaryPageSize,
     });
 
-    fetch(`http://${config.server_host}:${config.server_port}/nationality_summary?${queryParams}`)
+    fetch(`${config.host}/nationality_summary?${queryParams}`)
       .then(res => res.json())
-      .then(data => setSummaryResults(data));
+      .then(data => setSummaryResults(data))
+      .catch(err => console.error('Error fetching summary:', err));
   };
 
   useEffect(() => {
