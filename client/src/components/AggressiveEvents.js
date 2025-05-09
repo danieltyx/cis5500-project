@@ -22,9 +22,13 @@ const AggressiveEvents = () => {
           <table>
             <thead>
               <tr>
-                {Object.keys(parsedData[0]).map((key) => (
-                  <th key={key}>{key}</th>
-                ))}
+                {Object.keys(parsedData[0]).map(
+                  (
+                    key //general table used from TeamsPage
+                  ) => (
+                    <th key={key}>{key}</th>
+                  )
+                )}
               </tr>
             </thead>
             <tbody>

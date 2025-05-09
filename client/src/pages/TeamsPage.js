@@ -9,7 +9,7 @@ function TeamsPage() {
     "Average Offense X Position",
     "Total Goals",
     "Average Goals",
-    "Team Records",
+    "Team Records", //tabs on the page
     "Final to Early Ratio",
   ];
   const teamOkTabs = [TABS[1], TABS[2], TABS[3], TABS[4], TABS[5]];
@@ -34,7 +34,7 @@ function TeamsPage() {
   };
 
   const seasons = generateSeasons();
-
+  //below is all of our funcs for api handling
   async function getTeamsData() {
     try {
       console.log(
@@ -54,7 +54,7 @@ function TeamsPage() {
 
       if (!Array.isArray(parsedData)) {
         setPageData([parsedData]);
-        return [parsedData];
+        return [parsedData]; //sometiems with filters it just returns a single obj (i.e. record of a team in a given szn)
       } else {
         setPageData(parsedData);
         return parsedData;
@@ -204,7 +204,7 @@ function TeamsPage() {
       </div>
       <div className="thefilters">
         <div className="filter-controls">
-          {teamOkTabs.includes(selectedTab) && (
+          {teamOkTabs.includes(selectedTab) && ( //some tabs don't need the team filtering
             <label>
               Team Filter:
               <input
@@ -214,7 +214,7 @@ function TeamsPage() {
               />
             </label>
           )}
-          {seasonOkTabs.includes(selectedTab) && (
+          {seasonOkTabs.includes(selectedTab) && ( //some tabs don't need the season filtering
             <label>
               Season Filter:
               <input
@@ -224,15 +224,19 @@ function TeamsPage() {
               />
             </label>
           )}
-          {teamFilter && teamOkTabs.includes(selectedTab) && (
-            <select value={teamID} onChange={(e) => setTeamID(e.target.value)}>
-              {teams.map((team) => (
-                <option key={team.team_id} value={team.team_id}>
-                  {team.team_name}
-                </option>
-              ))}
-            </select>
-          )}
+          {teamFilter &&
+            teamOkTabs.includes(selectedTab) && ( //some tabs don't need the team filtering
+              <select
+                value={teamID}
+                onChange={(e) => setTeamID(e.target.value)}
+              >
+                {teams.map((team) => (
+                  <option key={team.team_id} value={team.team_id}>
+                    {team.team_name}
+                  </option>
+                ))}
+              </select>
+            )}
           {seasonFilter && seasonOkTabs.includes(selectedTab) && (
             <select
               value={selectedSeason}
@@ -248,28 +252,29 @@ function TeamsPage() {
         </div>
       </div>
 
-      {pageData && pageData.length > 0 && (
-        <div className="tableContainer">
-          <table>
-            <thead>
-              <tr>
-                {Object.keys(pageData[0]).map((key) => (
-                  <th key={key}>{key}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {pageData.map((item, index) => (
-                <tr key={index}>
-                  {Object.keys(item).map((key) => (
-                    <td key={key}>{item[key]}</td>
+      {pageData &&
+        pageData.length > 0 && ( //made a general table component that j reuses the structure of the first element
+          <div className="tableContainer">
+            <table>
+              <thead>
+                <tr>
+                  {Object.keys(pageData[0]).map((key) => (
+                    <th key={key}>{key}</th>
                   ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+              </thead>
+              <tbody>
+                {pageData.map((item, index) => (
+                  <tr key={index}>
+                    {Object.keys(item).map((key) => (
+                      <td key={key}>{item[key]}</td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
     </div>
   );
 }
