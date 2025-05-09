@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "../style/HomePage.css";
 
+//DONE
 function HomePage() {
   return (
     <div className="home-page">
