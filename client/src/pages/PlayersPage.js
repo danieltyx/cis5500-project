@@ -162,7 +162,7 @@ export default function PlayersPage() {
               </button>
             </div>
           </div>
-          <h2>Results</h2>//
+          <h2>Results</h2>
           <table className="player-table">
             <thead>
               <tr>

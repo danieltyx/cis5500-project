@@ -161,15 +161,20 @@ function GamesPage() {
       )}
       {selectedTab === 'Shot Analysis' && (
         <div>
-          <LopsidedGames />
+          <GameShotTypes />
         </div>
       )}
       {selectedTab === 'Lopsided Games' && (
         <div>
-          <ExperiencedWinnerLocations />
+          <LopsidedGames />
         </div>
       )}
       {selectedTab === 'Experienced Winner Locations' && (
+        <div>
+          <ExperiencedWinnerLocations />
+        </div>
+      )}
+      {selectedTab === 'Aggressive Events' && (
         <div>
           <AggressiveEvents />
         </div>

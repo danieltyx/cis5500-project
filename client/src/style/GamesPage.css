@@ -28,7 +28,7 @@
 }
 
 .filters {
-  width: 250px;
+  width: 300px;
   height: 80vh;
   border-right: 1px solid #000000;
   padding-right: 1rem;
@@ -109,7 +109,10 @@
 }
 
 .search-button {
-  margin-right: 1rem;
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-right: 10px;
+  width: fit-content;
 }
 
 .tie-row {

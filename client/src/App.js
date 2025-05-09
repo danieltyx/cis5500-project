@@ -6,7 +6,6 @@ import HomePage from './pages/HomePage';
 import TeamsPage from './pages/TeamsPage';
 import PlayersPage from './pages/PlayersPage';
 import GamesPage from './pages/GamesPage';
-import SignupPage from './pages/SignupPage';
 import Login from './components/Login';
 
 export default function App() {
@@ -19,7 +18,6 @@ export default function App() {
           <Route path="/players" component={PlayersPage} />
           <Route path="/teams" component={TeamsPage} />
           <Route path="/games" component={GamesPage} />
-          <Route path="/signup" component={SignupPage} />
           <Route path="/login" component={Login} />
         </Switch> }
       </BrowserRouter>
