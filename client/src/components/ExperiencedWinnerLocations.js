@@ -3,11 +3,21 @@ import "../style/ExperiencedWinnerLocations.css";
 
 const config = require('../config.json');
 const normalize = (val, min, max) => ((val - min) / (max - min)) * 100;
+const eventAbbreviations = {
+  Goal: "GOL",
+  Giveaway: "GVY",
+  Shot: "S",
+  Hit: "H",
+  Takeaway: "TKY",
+  'Blocked Shot': "B",
+  'Missed Shot': "M",
+  Faceoff: "F",
+  Penalty: "P"
+};
 
 const ExperiencedWinnerLocations = () => {
   const [locations, setLocations] = useState([]);
-  const [hoveredDot, setHoveredDot] = useState(null);
-  const xMin = -7.2, xMax = 7.2;
+  const xMin = -11, xMax = 11;
   const yMin = -4, yMax = 4;
 
   useEffect(() => {
@@ -18,8 +28,8 @@ const ExperiencedWinnerLocations = () => {
   }, []);
 
   return (
-    <div style={{ padding: '20px', marginTop: '0px' }}>
-      <h2>Event Summary Table</h2>
+    <div className="experienced-winners">
+      <h2 className="header">Event Summary Table</h2>
       <table className="player-table">
         <thead>
           <tr>
@@ -46,30 +56,31 @@ const ExperiencedWinnerLocations = () => {
         {locations.map((point, i) => {
           const left = normalize(parseFloat(point.avg_x), xMin, xMax);
           const top = 100 - normalize(parseFloat(point.avg_y), yMin, yMax);
-          const size = Math.log(parseInt(point.total_events)) * 1.5;
+          const size = Math.log(parseInt(point.total_events)) * 2;
+          const abbr = eventAbbreviations[point.event] || point.event.slice(0, 3).toUpperCase();
 
           return (
             <div
               key={i}
-              className="dot"
+              className="dot-labeled"
               style={{ left: `${left}%`, top: `${top}%`, width: size, height: size }}
-              onMouseEnter={() => setHoveredDot({ event: point.event, left, top })}
-              onMouseLeave={() => setHoveredDot(null)}
-            />
+            >
+              <span className="dot-label">{abbr}</span>
+            </div>
           );
         })}
+      </div>
 
-        {hoveredDot && (
-          <div
-            className="tooltip"
-            style={{
-              left: `${hoveredDot.left}%`,
-              top: `${hoveredDot.top}%`,
-            }}
-          >
-            {hoveredDot.event}
-          </div>
-        )}
+      <div className="legend-box">
+        <h3>Legend</h3>
+        <div className="legend-grid">
+          {Object.entries(eventAbbreviations).map(([event, abbr], i) => (
+            <div key={i} className="legend-item">
+              <div className="legend-dot" />
+              <span>{abbr}: {event}</span>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

@@ -62,6 +62,7 @@ function TeamsPage() {
     } catch (err) {
       console.error("Error fetching teams:", err);
       setError(err.message);
+      alert(error);
       return [];
     }
   }
