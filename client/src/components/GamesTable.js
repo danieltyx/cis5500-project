@@ -2,6 +2,7 @@ import '../style/GamesPage.css';
 
 export default function GamesTable({ games }) {
   return (
+    // Table to display all games based on what was returned from the api call
     <table className="games-table">
       <thead>
         <tr>
@@ -17,11 +18,7 @@ export default function GamesTable({ games }) {
         {games.map(game => {
           const isTie = game.home_goals === game.away_goals;
           const isHomeWin = game.home_goals > game.away_goals;
-          const rowClass = isTie
-            ? 'tie-row'
-            : isHomeWin
-            ? 'home-win-row'
-            : 'away-win-row';
+          const rowClass = isTie ? 'tie-row' : (isHomeWin ? 'home-win-row' : 'away-win-row');
 
           return (
             <tr key={game.game_id} className={rowClass}>
@@ -38,7 +35,6 @@ export default function GamesTable({ games }) {
           );
         })}
       </tbody>
-
     </table>
   );
 }

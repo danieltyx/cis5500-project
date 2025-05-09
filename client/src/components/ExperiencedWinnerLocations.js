@@ -20,6 +20,7 @@ const ExperiencedWinnerLocations = () => {
   const xMin = -11, xMax = 11;
   const yMin = -4, yMax = 4;
 
+  // Gets the data from the api key on load
   useEffect(() => {
     fetch(`http://${config.server_host}:${config.server_port}/exp_winner_xy`)
       .then((res) => res.json())
@@ -29,6 +30,7 @@ const ExperiencedWinnerLocations = () => {
 
   return (
     <div className="experienced-winners">
+      {/* Summary table which shows the average x and y positions of each event, as well as total number of events */}
       <h2 className="header">Event Summary Table</h2>
       <table className="player-table">
         <thead>
@@ -51,6 +53,7 @@ const ExperiencedWinnerLocations = () => {
         </tbody>
       </table>
 
+      {/* Displays a map of all the events to see where the events are on the field */}
       <h2>Event Locations Map</h2>
       <div className="rink-container">
         {locations.map((point, i) => {
@@ -71,6 +74,7 @@ const ExperiencedWinnerLocations = () => {
         })}
       </div>
 
+      {/* Legend to show what each abbreviation means on the map */}
       <div className="legend-box">
         <h3>Legend</h3>
         <div className="legend-grid">

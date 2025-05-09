@@ -17,7 +17,9 @@ const GamesFilter = ({
   currPage
 }) => {
   return (
+    // Code for the filtering (handles querying based on teams, season, page, etc)
     <div className="filters">
+      {/* Section for season filter box */}
       <div className="filter-box">
         <label><b>Season</b></label>
         <input
@@ -26,6 +28,7 @@ const GamesFilter = ({
         />
       </div>
 
+      {/* Section for home team filter box */}
       <div className="filter-box">
         <label><b>Home Team</b></label>
         <input
@@ -45,6 +48,7 @@ const GamesFilter = ({
         )}
       </div>
 
+      {/* Section for away team filter box */}
       <div className="filter-box">
         <label><b>Away Team</b></label>
         <input
@@ -64,6 +68,7 @@ const GamesFilter = ({
         )}
       </div>
 
+      {/* Checkboxes to determine if you want playoff games, regular games, or both */}
       <div className="filter-box">
         <label><b>Match Type</b></label>
         {matchTypes.map(type => (
@@ -80,6 +85,7 @@ const GamesFilter = ({
         ))}
       </div>
 
+      {/* Date handling for finding matches that start on/after a specific date */}
       <div className="filter-box">
         <label><b>Date Range Start</b></label>
         <input
@@ -89,6 +95,7 @@ const GamesFilter = ({
         />
       </div>
 
+      {/* Date handling for finding matches that start on/before a specific date */}
       <div className="filter-box">
         <label><b>Date Range End</b></label>
         <input
@@ -98,9 +105,11 @@ const GamesFilter = ({
         />
       </div>
 
+
+      {/* Button to handle search based on the specific page, buton to clear all filters */}
       <div className="filter-box">
         <button className="search-button" onClick={() => handleSearch(currPage)}>Search</button>
-        <button className="search-button" onClick={clearFilter}>Clear Filter</button>
+        <button className="search-button" onClick={clearFilter}>Clear Filters</button>
       </div>
     </div>
   );

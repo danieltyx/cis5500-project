@@ -6,6 +6,7 @@ const config = require('../config.json');
 const LopsidedGames = () => {
   const [games, setGames] = useState([]);
 
+  // Get data from api on load
   useEffect(() => {
     fetch(`http://${config.server_host}:${config.server_port}/lopsided_games`)
       .then((res) => res.json())
@@ -15,6 +16,7 @@ const LopsidedGames = () => {
 
   return (
     <div className="most-lopsided-games">
+      {/* Table to display all lopsided games */}
       <h3 className="lopsided-games-heading">Most Lopsided Games (by Goal Differential)</h3>
       <div className="lopsided-container">
         <table className="lopsided-table">
@@ -33,6 +35,7 @@ const LopsidedGames = () => {
           <table className="lopsided-table">
             <tbody>
               {games.map((game) => {
+                // Color code based on if home team wins vs away team wins
                 let bgColor = "#ffffff";
                 if (game.home_goals > game.away_goals) bgColor = "#d4f5e6";
                 else if (game.home_goals < game.away_goals) bgColor = "#ffe3dc";

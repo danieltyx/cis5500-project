@@ -20,6 +20,7 @@ function GamesPage() {
     dateRangeEnd: ''
   });
 
+  // Handle all filters and retrieved data. All of this is for the GamesFilter/GamesTable
   const [allTeams, setAllTeams] = useState([]);
   const [homeSuggestions, setHomeSuggestions] = useState([]);
   const [awaySuggestions, setAwaySuggestions] = useState([]);
@@ -72,11 +73,13 @@ function GamesPage() {
   const justLoadedRef = useRef(true);
 
   useEffect(() => {
+    // Loads the data once on load
     if (justLoadedRef.current) {
       handleSearch(1);
       justLoadedRef.current = false;
     }
 
+    // Fetch all teams for autofill on load
     fetch(`${config.host}/teams`)
       .then(res => res.json())
       .then(teams => {
@@ -88,6 +91,7 @@ function GamesPage() {
 
   return (
     <div className="games-page">
+      {/* Handle the 5 types of game pages for the user to switch between */}
       <div className="tabs">
         {TABS.map(tab => (
           <button
@@ -100,6 +104,7 @@ function GamesPage() {
         ))}
       </div>
 
+      {/* Get GamesFilter component and GamesTable component to display all games */}
       {selectedTab === 'Find Games' && (
         <div className="content">
           <GamesFilter
@@ -137,16 +142,22 @@ function GamesPage() {
           </div>
         </div>
       )}
+
+      {/* Get GameShot component to display shot analysis if the Shot Analysis tab is selected */}
       {selectedTab === 'Shot Analysis' && (
         <div>
           <GameShotTypes/>
         </div>
       )}
+
+      {/* Get LopsidedGames component to display lopsided games if the Lopsided Games tab is selected */}
       {selectedTab === 'Lopsided Games' && (
         <div>
           <LopsidedGames/>
         </div>
       )}
+
+      {/* Get ExperiencedWinnerLocations component to display the map if the Experienced Winner Locations component is selected */}
       {selectedTab === 'Experienced Winner Locations' && (
         <div>
           <ExperiencedWinnerLocations/>

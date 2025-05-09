@@ -6,15 +6,18 @@ const config = require('../config.json');
 
 const ShotTypeStats = () => {
   const [data, setData] = useState([]);
-  const [viewMode, setViewMode] = useState('shots');
+  // Calculates the percentage of goals out of all shots taken
   const enrichedData = data.map(row => ({
     ...row,
     winner_conversion: row.winner_shots > 0 ? (row.winner_goals / row.winner_shots * 100).toFixed(1) : "0.0",
     loser_conversion: row.loser_shots > 0 ? (row.loser_goals / row.loser_shots * 100).toFixed(1) : "0.0"
   }));
 
+  // For toggle between shot data and goal data
+  const [viewMode, setViewMode] = useState('shots');
   const isShots = viewMode === 'shots';
 
+  // Gets data as page loads
   useEffect(() => {
     fetch(`http://${config.server_host}:${config.server_port}/shot_types`)
       .then(res => res.json())
@@ -25,6 +28,7 @@ const ShotTypeStats = () => {
   return (
     <div className='shot-type'>
       <h3 className='shot-performance-heading'>Shot Type Performance</h3>
+      {/* Table to display the different shot types and their statistics */}
       <table className="shots-table mb-8">
         <thead>
           <tr>
@@ -52,8 +56,8 @@ const ShotTypeStats = () => {
         </tbody>
       </table>
 
-
       <br/>
+      {/* Radio button to either display shot statistics and goal statistics */}
       <h3 className="text-lg font-semibold mb-2">
         Bar Chart Comparison ({isShots ? 'Shots' : 'Goals'})
       </h3>
@@ -78,6 +82,7 @@ const ShotTypeStats = () => {
         Show Goals
       </label>
       
+      {/* Bar Chart that either displays shot statistics, or goal statistics grouped by shot types */}
       <ResponsiveContainer width="100%" height={500}>
         <BarChart
           data={data}
