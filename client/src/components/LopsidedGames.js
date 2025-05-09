@@ -7,7 +7,7 @@ const LopsidedGames = () => {
 
   // Get data from api on load
   useEffect(() => {
-    fetch(`http://${config.server_host}:${config.server_port}/lopsided_games`)
+     fetch(`${config.host}/lopsided_games`)
       .then((res) => res.json())
       .then((data) => {console.log(data.rows); setGames(data.rows)})
       .catch((err) => console.error("Error fetching data:", err));

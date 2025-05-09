@@ -5,7 +5,7 @@ import config from "../config";
 const AggressiveEvents = () => {
   const [parsedData, setParsedData] = useState([]);
   useEffect(() => {
-    fetch(`http://${config.server_host}:${config.server_port}/aggravated-stats`)
+    fetch(`${config.host}/aggravated-stats`)
       .then((response) => response.json())
       .then((data) => {
         setParsedData(data);
