@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../style/ExperiencedWinnerLocations.css";
+import config from "../config";
 
-const config = require("../config.json");
 const normalize = (val, min, max) => ((val - min) / (max - min)) * 100;
 const eventAbbreviations = {
   Goal: "GOL",

@@ -9,8 +9,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import "../style/GameShotTypes.css";
-
-const config = require("../config.json");
+import config from "../config";
 
 const ShotTypeStats = () => {
   const [data, setData] = useState([]);

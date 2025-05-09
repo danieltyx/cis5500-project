@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "../style/LopsidedGames.css";
-
-const config = require('../config.json');
+import config from "../config";
 
 const LopsidedGames = () => {
   const [games, setGames] = useState([]);

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "../style/AggressiveEvents.css";
-
-const config = require("../config.json");
+import config from "../config";
 
 const AggressiveEvents = () => {
   const [parsedData, setParsedData] = useState([]);
