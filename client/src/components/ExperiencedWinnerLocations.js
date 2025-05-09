@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../style/ExperiencedWinnerLocations.css";
 
-const config = require('../config.json');
+const config = require("../config.json");
 const normalize = (val, min, max) => ((val - min) / (max - min)) * 100;
 const eventAbbreviations = {
   Goal: "GOL",
@@ -9,16 +9,18 @@ const eventAbbreviations = {
   Shot: "S",
   Hit: "H",
   Takeaway: "TKY",
-  'Blocked Shot': "B",
-  'Missed Shot': "M",
+  "Blocked Shot": "B",
+  "Missed Shot": "M",
   Faceoff: "F",
-  Penalty: "P"
+  Penalty: "P",
 };
 
 const ExperiencedWinnerLocations = () => {
   const [locations, setLocations] = useState([]);
-  const xMin = -11, xMax = 11;
-  const yMin = -4, yMax = 4;
+  const xMin = -11,
+    xMax = 11;
+  const yMin = -4,
+    yMax = 4;
 
   useEffect(() => {
     fetch(`http://${config.server_host}:${config.server_port}/exp_winner_xy`)
@@ -57,13 +59,20 @@ const ExperiencedWinnerLocations = () => {
           const left = normalize(parseFloat(point.avg_x), xMin, xMax);
           const top = 100 - normalize(parseFloat(point.avg_y), yMin, yMax);
           const size = Math.log(parseInt(point.total_events)) * 2;
-          const abbr = eventAbbreviations[point.event] || point.event.slice(0, 3).toUpperCase();
+          const abbr =
+            eventAbbreviations[point.event] ||
+            point.event.slice(0, 3).toUpperCase();
 
           return (
             <div
               key={i}
               className="dot-labeled"
-              style={{ left: `${left}%`, top: `${top}%`, width: size, height: size }}
+              style={{
+                left: `${left}%`,
+                top: `${top}%`,
+                width: size,
+                height: size,
+              }}
             >
               <span className="dot-label">{abbr}</span>
             </div>
@@ -77,7 +86,9 @@ const ExperiencedWinnerLocations = () => {
           {Object.entries(eventAbbreviations).map(([event, abbr], i) => (
             <div key={i} className="legend-item">
               <div className="legend-dot" />
-              <span>{abbr}: {event}</span>
+              <span>
+                {abbr}: {event}
+              </span>
             </div>
           ))}
         </div>

@@ -41,6 +41,7 @@ app.get("/teams/total-goals", routes.total_goals);
 app.get("/teams/avg-goals", routes.avg_goals);
 app.get("/teams/records", routes.getRecords);
 app.get("/teams/final-to-early-ratio", routes.finalToEarlyRatio);
+app.get("/aggravated-stats", routes.getAggravatedStats);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
