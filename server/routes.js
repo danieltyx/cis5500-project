@@ -459,7 +459,7 @@ ORDER BY final_to_early_ratio DESC;`,
 
 // Game Routes
 const getGames = async (req, res) => {
-  // query 6
+  // Query 6: gets all games given the specific query parameters. Handles cases if the parameters are empty
   const season = req.query.season ? parseInt(req.query.season) : null;
   let seasonCondition = '';
   if (season) {
@@ -502,7 +502,7 @@ const getGames = async (req, res) => {
 };
 
 const getShotTypeStats = (req, res) => {
-  // query 8
+  // Query 8: get all game events that are shots and goals, then group them by secondaryType to display in table/chart form
   connection.query(`
     SELECT 
         ge.secondaryType AS shot_type,
@@ -543,7 +543,7 @@ const getShotTypeStats = (req, res) => {
 };
 
 const getLopsidedGames = (req, res) => {
-  // query 10
+  // Query 10: Finds games with significant goal differences, and the shots taken from the home/away team
   connection.query(`
     WITH goal_diffs AS (
       SELECT 
@@ -585,6 +585,7 @@ const getLopsidedGames = (req, res) => {
 };
 
 const getAvgXYExperiencedWinner = (req, res) => {
+  // Complex Query: finds the average x and y positions of specific events that include players who are experienced and win a majority of their games
   connection.query(`
     WITH player_season_counts AS (
       SELECT player_id
