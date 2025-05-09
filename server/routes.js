@@ -39,29 +39,27 @@ const searchPlayers = async (req, res) => {
     conditions.push(`CAST(player_id AS TEXT) LIKE '%${req.query.player_id}%'`);
   }
   if (req.query.name) {
-    conditions.push(
-      `(first_name LIKE '%${req.query.name}%' OR last_name LIKE '%${req.query.name}%')`
-    );
+    conditions.push(`(first_name ILIKE '%${req.query.name}%' OR last_name ILIKE '%${req.query.name}%')`);
+
+  }
+  if (req.query.name) {
+    conditions.push(`(first_name ILIKE '%${req.query.name}%' OR last_name ILIKE '%${req.query.name}%')`);
   }
   if (req.query.position) {
-    conditions.push(`primary_position LIKE '%${req.query.position}%'`);
+    conditions.push(`primary_position ILIKE '%${req.query.position}%'`);
   }
   if (req.query.nationality) {
-    conditions.push(`nationality LIKE '%${req.query.nationality}%'`);
+    conditions.push(`nationality ILIKE '%${req.query.nationality}%'`);
   }
   if (req.query.birth_city) {
-    conditions.push(`birth_city LIKE '%${req.query.birth_city}%'`);
-  }
-  if (req.query.height_low && req.query.height_high) {
-    conditions.push(
-      `height_cm BETWEEN ${req.query.height_low} AND ${req.query.height_high}`
-    );
+    conditions.push(`birth_city ILIKE '%${req.query.birth_city}%'`);
   }
 
   if (conditions.length > 0) {
     baseQuery += " AND " + conditions.join(" AND ");
   }
 
+  console.log(baseQuery);
   connection.query(baseQuery, (err, data) => {
     if (err) {
       console.log(err);
