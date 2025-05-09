@@ -1,0 +1,7 @@
+.aggressive-event-row:nth-child(even) {
+  background-color: #d4f5e6;
+}
+
+.aggressive-event-row:nth-child(odd) {
+  background-color: #ffe3dc;
+}

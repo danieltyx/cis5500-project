@@ -1,4 +1,4 @@
-const { Pool, types } = require('pg');
+const { Pool, types } = require("pg");
 var config = require("./db-config.js");
 
 config.connectionLimit = 10;
@@ -14,12 +14,6 @@ const connection = new Pool({
 });
 connection.connect((err) => err && console.log(err));
 
-/* -------------------------------------------------- */
-/* ------------------- Route Handlers --------------- */
-/* -------------------------------------------------- */
-
-// Player Routes
-// GET /players
 const get_players = async (req, res) => {
   connection.query(
     `SELECT player_id, first_name, last_name, nationality, birth_city, primary_position, birth_date, height_cm FROM players;`,
@@ -34,7 +28,6 @@ const get_players = async (req, res) => {
   );
 };
 
-// GET /search_players 
 const searchPlayers = async (req, res) => {
   let baseQuery = `
     SELECT player_id, first_name, last_name, nationality, birth_city, primary_position, birth_date, height_cm
@@ -46,7 +39,9 @@ const searchPlayers = async (req, res) => {
     conditions.push(`CAST(player_id AS TEXT) LIKE '%${req.query.player_id}%'`);
   }
   if (req.query.name) {
-    conditions.push(`(first_name LIKE '%${req.query.name}%' OR last_name LIKE '%${req.query.name}%')`);
+    conditions.push(
+      `(first_name LIKE '%${req.query.name}%' OR last_name LIKE '%${req.query.name}%')`
+    );
   }
   if (req.query.position) {
     conditions.push(`primary_position LIKE '%${req.query.position}%'`);
@@ -58,11 +53,13 @@ const searchPlayers = async (req, res) => {
     conditions.push(`birth_city LIKE '%${req.query.birth_city}%'`);
   }
   if (req.query.height_low && req.query.height_high) {
-    conditions.push(`height_cm BETWEEN ${req.query.height_low} AND ${req.query.height_high}`);
+    conditions.push(
+      `height_cm BETWEEN ${req.query.height_low} AND ${req.query.height_high}`
+    );
   }
 
   if (conditions.length > 0) {
-    baseQuery += ' AND ' + conditions.join(' AND ');
+    baseQuery += " AND " + conditions.join(" AND ");
   }
 
   connection.query(baseQuery, (err, data) => {
@@ -85,7 +82,7 @@ const getNationalitySummary = async (req, res) => {
       SELECT p.player_id, p.first_name, p.last_name, p.primary_position, pt.season
       FROM players p
       JOIN player_teams pt ON p.player_id = pt.player_id
-      ${nationality ? 'WHERE p.nationality = $1' : ''}
+      ${nationality ? "WHERE p.nationality = $1" : ""}
     ),
     position_counts AS (
       SELECT player_id, first_name, last_name, primary_position,
@@ -107,8 +104,8 @@ const getNationalitySummary = async (req, res) => {
 
   connection.query(query, values, (err, data) => {
     if (err) {
-      console.error('Database error:', err);
-      res.status(500).json({ error: 'Query failed' });
+      console.error("Database error:", err);
+      res.status(500).json({ error: "Query failed" });
     } else {
       res.json(data.rows);
     }
@@ -169,7 +166,7 @@ GROUP BY ge.team_id_for, t.team_name;
 };
 
 const total_goals = async (req, res) => {
-  //query 2
+  //qurry 2
   const team_id = req.query.team_id || -1;
   if (team_id == -1) {
     connection.query(
@@ -461,28 +458,33 @@ ORDER BY final_to_early_ratio DESC;`,
 const getGames = async (req, res) => {
   // Query 6: gets all games given the specific query parameters. Handles cases if the parameters are empty
   const season = req.query.season ? parseInt(req.query.season) : null;
-  let seasonCondition = '';
+  let seasonCondition = "";
   if (season) {
     seasonCondition = `\nAND (
-      season = ${'' + (season - 1) + season} OR 
-      season = ${'' + season + (season + 1)}
+      season = ${"" + (season - 1) + season} OR 
+      season = ${"" + season + (season + 1)}
     )`;
   }
-  var type = req.query.type ? req.query.type.split(',') : [];
-  type = type.map(type => "'" + type + "'");
-  const homeTeam = req.query.homeTeam || '';
-  const awayTeam = req.query.awayTeam || '';
+  var type = req.query.type ? req.query.type.split(",") : [];
+  type = type.map((type) => "'" + type + "'");
+  const homeTeam = req.query.homeTeam || "";
+  const awayTeam = req.query.awayTeam || "";
   const dateRangeStart = req.query.dateRangeStart || null;
   const dateRangeEnd = req.query.dateRangeEnd || null;
   const dateConditions = [];
-  if (dateRangeStart) dateConditions.push(`G.date_time_gmt >= '${dateRangeStart}T00:00:00Z'`);
-  if (dateRangeEnd) dateConditions.push(`G.date_time_gmt <= '${dateRangeEnd}T00:00:00Z'`);
-  const dateCondition = dateConditions.length ? `\nAND ${dateConditions.join(' AND ')}` : '';
-  const page = parseInt(req.query.page || '1', 10);
+  if (dateRangeStart)
+    dateConditions.push(`G.date_time_gmt >= '${dateRangeStart}T00:00:00Z'`);
+  if (dateRangeEnd)
+    dateConditions.push(`G.date_time_gmt <= '${dateRangeEnd}T00:00:00Z'`);
+  const dateCondition = dateConditions.length
+    ? `\nAND ${dateConditions.join(" AND ")}`
+    : "";
+  const page = parseInt(req.query.page || "1", 10);
   const pageSize = 15;
   const offset = (page - 1) * pageSize;
 
-  connection.query(`SELECT game_id, season, enum, T1.team_name AS home_team_name, T2.team_name AS away_team_name, away_goals, home_goals, date_time_gmt
+  connection.query(
+    `SELECT game_id, season, enum, T1.team_name AS home_team_name, T2.team_name AS away_team_name, away_goals, home_goals, date_time_gmt
   FROM games G
   INNER JOIN teams T1 ON T1.team_id = G.home_team_id
   INNER JOIN teams T2 ON T2.team_id = G.away_team_id 
@@ -491,14 +493,16 @@ const getGames = async (req, res) => {
     AND T2.team_name LIKE '%${awayTeam}%'${seasonCondition}${dateCondition}
   ORDER BY date_time_gmt
   LIMIT ${pageSize}
-  OFFSET ${offset};`, (err, data) => {
-    if (err) {
-      console.log(err);
-      res.json({});
-    } else {
-      res.json(data.rows);
+  OFFSET ${offset};`,
+    (err, data) => {
+      if (err) {
+        console.log(err);
+        res.json({});
+      } else {
+        res.json(data.rows);
+      }
     }
-  });
+  );
 };
 
 const getShotTypeStats = (req, res) => {
@@ -532,18 +536,20 @@ const getShotTypeStats = (req, res) => {
       AND ge.secondaryType IS NOT NULL
       AND ge.secondaryType != 'NA'
     GROUP BY ge.secondaryType;
-`, (err, results) => {
-    if (err) {
-      console.error(err);
-      res.status(500).json({ error: "Query failed" });
-    } else {
-      res.json(results);
+`,
+    (err, results) => {
+      if (err) {
+        console.error(err);
+        res.status(500).json({ error: "Query failed" });
+      } else {
+        res.json(results);
+      }
     }
-  });
+  );
 };
 
 const getLopsidedGames = (req, res) => {
-  // Query 10: Finds games with significant goal differences, and the shots taken from the home/away team
+  // query 10
   connection.query(`
     WITH goal_diffs AS (
       SELECT 
@@ -574,18 +580,19 @@ const getLopsidedGames = (req, res) => {
     JOIN shots s ON gd.game_id = s.game_id
     WHERE gd.goal_diff >= (SELECT max_diff FROM max_diff)
     ORDER BY gd.goal_diff DESC;
-`, (err, results) => {
-    if (err) {
-      console.error(err);
-      res.status(500).json({ error: "Query failed" });
-    } else {
-      res.json(results);
+`,
+    (err, results) => {
+      if (err) {
+        console.error(err);
+        res.status(500).json({ error: "Query failed" });
+      } else {
+        res.json(results);
+      }
     }
-  });
+  );
 };
 
 const getAvgXYExperiencedWinner = (req, res) => {
-  // Complex Query: finds the average x and y positions of specific events that include players who are experienced and win a majority of their games
   connection.query(`
     WITH player_season_counts AS (
       SELECT player_id
@@ -641,17 +648,53 @@ const getAvgXYExperiencedWinner = (req, res) => {
     JOIN games g ON fe.game_id = g.game_id
     GROUP BY fe.event
     ORDER BY avg_x DESC;
-`, (err, results) => {
-    if (err) {
-      console.error(err);
-      res.status(500).json({ error: "Query failed" });
-    } else {
-      res.json(results);
+`,
+    (err, results) => {
+      if (err) {
+        console.error(err);
+        res.status(500).json({ error: "Query failed" });
+      } else {
+        res.json(results);
+      }
     }
-  });
-}
+  );
+};
 
-// The exported functions, which can be accessed in index.js.
+const getAggravatedStats = (req, res) => {
+  connection.query(
+    `SELECT
+    f.game_id,
+    f.period,
+    COUNT(*) AS aggravated_events,
+    g.goal_count,
+    ROUND(g.avg_goal_x, 2) AS avg_goal_x,
+    ROUND(g.avg_goal_y, 2) AS avg_goal_y,
+    ROUND(AVG(ABS(f.fight_x - g.avg_goal_x)), 2) AS avg_abs_x_dist,
+    ROUND(AVG(ABS(f.fight_y - g.avg_goal_y)), 2) AS avg_abs_y_dist,
+    ROUND(agg.total_goals, 2) AS total_goals,
+    ROUND(agg.total_shots, 2) AS total_shots,
+    ROUND(agg.total_goals - avg_stats.avg_goals_per_game, 2) AS normalized_goals,
+    ROUND(agg.total_shots - avg_stats.avg_shots_per_game, 2) AS normalized_shots
+FROM fight_events f
+JOIN goal_stats g
+  ON f.game_id = g.game_id AND f.period = g.period
+JOIN game_aggregates agg
+  ON f.game_id = agg.game_id
+CROSS JOIN game_averages avg_stats
+GROUP BY
+    f.game_id, f.period, g.goal_count, g.avg_goal_x, g.avg_goal_y,
+    agg.total_goals, agg.total_shots, avg_stats.avg_goals_per_game, avg_stats.avg_shots_per_game;`,
+    (err, data) => {
+      if (err) {
+        console.log(err);
+        res.json({});
+      } else {
+        res.json(data.rows);
+      }
+    }
+  );
+};
+
 module.exports = {
   get_players,
   searchPlayers,
@@ -665,5 +708,6 @@ module.exports = {
   getGames,
   getShotTypeStats,
   getLopsidedGames,
-  getAvgXYExperiencedWinner
-}
+  getAvgXYExperiencedWinner,
+  getAggravatedStats,
+};

@@ -1,23 +1,30 @@
-import React, { useState, useEffect, useRef } from 'react';
-import GamesTable from '../components/GamesTable';
-import GamesFilter from '../components/GamesFilter';
-import GameShotTypes from '../components/GameShotTypes';
-import LopsidedGames from '../components/LopsidedGames';
-import ExperiencedWinnerLocations from '../components/ExperiencedWinnerLocations';
-import '../style/GamesPage.css';
-import config from '../config';
+import React, { useState, useEffect, useRef } from "react";
+import GamesTable from "../components/GamesTable";
+import GamesFilter from "../components/GamesFilter";
+import GameShotTypes from "../components/GameShotTypes";
+import LopsidedGames from "../components/LopsidedGames";
+import ExperiencedWinnerLocations from "../components/ExperiencedWinnerLocations";
+import AggressiveEvents from "../components/AggressiveEvents";
+import "../style/GamesPage.css";
+import config from "../config";
 
-const TABS = ['Find Games', 'Shot Analysis', 'Lopsided Games', 'Experienced Winner Locations'];
+const TABS = [
+  "Find Games",
+  "Shot Analysis",
+  "Lopsided Games",
+  "Experienced Winner Locations",
+  "Aggressive Events",
+];
 
 function GamesPage() {
   const [selectedTab, setSelectedTab] = useState(TABS[0]);
   const [filters, setFilters] = useState({
-    season: '',
-    type: ['R', 'P'],
-    homeTeam: '',
-    awayTeam: '',
-    dateRangeStart: '',
-    dateRangeEnd: ''
+    season: "",
+    type: ["R", "P"],
+    homeTeam: "",
+    awayTeam: "",
+    dateRangeStart: "",
+    dateRangeEnd: "",
   });
 
   // Handle all filters and retrieved data. All of this is for the GamesFilter/GamesTable
@@ -28,20 +35,22 @@ function GamesPage() {
   const [currPage, setCurrPage] = useState(1);
 
   const handleFilterChange = (field, value) => {
-    setFilters(prev => ({ ...prev, [field]: value }));
+    setFilters((prev) => ({ ...prev, [field]: value }));
   };
 
   const toggleMatchType = (type) => {
-    setFilters(prev => ({
+    setFilters((prev) => ({
       ...prev,
       type: prev.type.includes(type)
-        ? prev.type.filter(t => t !== type)
+        ? prev.type.filter((t) => t !== type)
         : [...prev.type, type],
     }));
   };
 
   const filterSuggestions = (input, source) =>
-    source.filter(option => option.toLowerCase().includes(input.toLowerCase()));
+    source.filter((option) =>
+      option.toLowerCase().includes(input.toLowerCase())
+    );
 
   const handleSearch = (page) => {
     if (filters.type.length === 0) {
@@ -51,24 +60,24 @@ function GamesPage() {
 
       setCurrPage(page);
       fetch(`${config.host}/find_games?page=${page}&${queryParams.toString()}`)
-        .then(res => res.json())
-        .then(games => {
+        .then((res) => res.json())
+        .then((games) => {
           setCurrGames(games);
         })
-        .catch(err => console.error('Error fetching games:', err));
+        .catch((err) => console.error("Error fetching games:", err));
     }
-  }
+  };
 
   const clearFilter = () => {
     setFilters({
-      season: '',
-      type: ['R', 'P'],
-      homeTeam: '',
-      awayTeam: '',
-      dateRangeStart: '',
-      dateRangeEnd: ''
+      season: "",
+      type: ["R", "P"],
+      homeTeam: "",
+      awayTeam: "",
+      dateRangeStart: "",
+      dateRangeEnd: "",
     });
-  }
+  };
 
   const justLoadedRef = useRef(true);
 
@@ -81,22 +90,22 @@ function GamesPage() {
 
     // Fetch all teams for autofill on load
     fetch(`${config.host}/teams`)
-      .then(res => res.json())
-      .then(teams => {
-        const teamNames = teams.map(team => team.team_name);
+      .then((res) => res.json())
+      .then((teams) => {
+        const teamNames = teams.map((team) => team.team_name);
         setAllTeams(teamNames);
       })
-      .catch(err => console.error('Error fetching teams:', err));
+      .catch((err) => console.error("Error fetching teams:", err));
   }, []);
 
   return (
     <div className="games-page">
       {/* Handle the 5 types of game pages for the user to switch between */}
       <div className="tabs">
-        {TABS.map(tab => (
+        {TABS.map((tab) => (
           <button
             key={tab}
-            className={`tab-button ${selectedTab === tab ? 'active' : ''}`}
+            className={`tab-button ${selectedTab === tab ? "active" : ""}`}
             onClick={() => setSelectedTab(tab)}
           >
             {tab}
@@ -123,8 +132,16 @@ function GamesPage() {
           />
 
           <div className="table-container">
-            <GamesTable games={currGames}/>
-            <div className="pagination-controls" style={{ marginTop: '1rem', display: 'flex', justifyContent: 'center', gap: '1rem' }}>
+            <GamesTable games={currGames} />
+            <div
+              className="pagination-controls"
+              style={{
+                marginTop: "1rem",
+                display: "flex",
+                justifyContent: "center",
+                gap: "1rem",
+              }}
+            >
               <button
                 onClick={() => handleSearch(Math.max(currPage - 1, 1))}
                 disabled={currPage === 1}
@@ -142,25 +159,19 @@ function GamesPage() {
           </div>
         </div>
       )}
-
-      {/* Get GameShot component to display shot analysis if the Shot Analysis tab is selected */}
       {selectedTab === 'Shot Analysis' && (
         <div>
-          <GameShotTypes/>
+          <LopsidedGames />
         </div>
       )}
-
-      {/* Get LopsidedGames component to display lopsided games if the Lopsided Games tab is selected */}
       {selectedTab === 'Lopsided Games' && (
         <div>
-          <LopsidedGames/>
+          <ExperiencedWinnerLocations />
         </div>
       )}
-
-      {/* Get ExperiencedWinnerLocations component to display the map if the Experienced Winner Locations component is selected */}
       {selectedTab === 'Experienced Winner Locations' && (
         <div>
-          <ExperiencedWinnerLocations/>
+          <AggressiveEvents />
         </div>
       )}
     </div>
