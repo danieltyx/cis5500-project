@@ -1,33 +1,47 @@
-import { useEffect, useState } from 'react';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import '../style/GameShotTypes.css';
+import { useEffect, useState } from "react";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
+import "../style/GameShotTypes.css";
 
-const config = require('../config.json');
+const config = require("../config.json");
 
 const ShotTypeStats = () => {
   const [data, setData] = useState([]);
   // Calculates the percentage of goals out of all shots taken
-  const enrichedData = data.map(row => ({
+  const enrichedData = data.map((row) => ({
     ...row,
-    winner_conversion: row.winner_shots > 0 ? (row.winner_goals / row.winner_shots * 100).toFixed(1) : "0.0",
-    loser_conversion: row.loser_shots > 0 ? (row.loser_goals / row.loser_shots * 100).toFixed(1) : "0.0"
+    winner_conversion:
+      row.winner_shots > 0
+        ? ((row.winner_goals / row.winner_shots) * 100).toFixed(1)
+        : "0.0",
+    loser_conversion:
+      row.loser_shots > 0
+        ? ((row.loser_goals / row.loser_shots) * 100).toFixed(1)
+        : "0.0",
   }));
 
   // For toggle between shot data and goal data
-  const [viewMode, setViewMode] = useState('shots');
-  const isShots = viewMode === 'shots';
+  const [viewMode, setViewMode] = useState("shots");
+  const isShots = viewMode === "shots";
 
   // Gets data as page loads
   useEffect(() => {
     fetch(`http://${config.server_host}:${config.server_port}/shot_types`)
-      .then(res => res.json())
-      .then(resJson => setData(resJson.rows))
+      .then((res) => res.json())
+      .then((resJson) => setData(resJson.rows))
       .catch(console.error);
   }, []);
 
   return (
-    <div className='shot-type'>
-      <h3 className='shot-performance-heading'>Shot Type Performance</h3>
+    <div className="shot-type">
+      <h3 className="shot-performance-heading">Shot Type Performance</h3>
       {/* Table to display the different shot types and their statistics */}
       <table className="shots-table mb-8">
         <thead>
@@ -44,7 +58,7 @@ const ShotTypeStats = () => {
         <tbody>
           {enrichedData.map((row, idx) => (
             <tr key={idx}>
-              <td>{row.shot_type || 'Unknown'}</td>
+              <td>{row.shot_type || "Unknown"}</td>
               <td>{row.winner_shots}</td>
               <td>{row.winner_goals}</td>
               <td>{row.winner_conversion}%</td>
@@ -56,16 +70,16 @@ const ShotTypeStats = () => {
         </tbody>
       </table>
 
-      <br/>
+      <br />
       {/* Radio button to either display shot statistics and goal statistics */}
       <h3 className="text-lg font-semibold mb-2">
-        Bar Chart Comparison ({isShots ? 'Shots' : 'Goals'})
+        Bar Chart Comparison ({isShots ? "Shots" : "Goals"})
       </h3>
       <label className="mr-4 text-sm">
         <input
           type="radio"
           value="shots"
-          checked={viewMode === 'shots'}
+          checked={viewMode === "shots"}
           onChange={(e) => setViewMode(e.target.value)}
           className="mr-1"
         />
@@ -75,14 +89,14 @@ const ShotTypeStats = () => {
         <input
           type="radio"
           value="goals"
-          checked={viewMode === 'goals'}
+          checked={viewMode === "goals"}
           onChange={(e) => setViewMode(e.target.value)}
           className="mr-1"
         />
         Show Goals
       </label>
-      
-      {/* Bar Chart that either displays shot statistics, or goal statistics grouped by shot types */}
+
+      {/* Bar Chart that either displays shot stats, or goal statistics grouped by shot types */}
       <ResponsiveContainer width="100%" height={500}>
         <BarChart
           data={data}

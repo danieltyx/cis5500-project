@@ -1,6 +1,6 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import '../style/HomePage.css';
+import React from "react";
+import { Link } from "react-router-dom";
+import "../style/HomePage.css";
 
 function HomePage() {
   return (
@@ -8,15 +8,25 @@ function HomePage() {
       <div className="banner">
         <div className="banner-content">
           <h1>Welcome to NHL Game Statistics</h1>
-          <p>Your ultimate destination for comprehensive NHL statistics and analysis</p>
+          <p>
+            Your ultimate destination for comprehensive NHL statistics and
+            analysis
+          </p>
           <div className="banner-buttons">
-            <Link to="/players" className="banner-button">Explore Players</Link>
-            <Link to="/teams" className="banner-button">View Teams</Link>
-            <Link to="/games" className="banner-button">Check Games</Link>
+            <Link to="/players" className="banner-button">
+              Explore Players
+            </Link>
+            <Link to="/teams" className="banner-button">
+              View Teams
+            </Link>
+            <Link to="/games" className="banner-button">
+              Check Games
+            </Link>{" "}
+            {/*link to all the pages */}
           </div>
         </div>
       </div>
-      
+
       <div className="features-section">
         <h2>What We Offer</h2>
         <div className="features-grid">

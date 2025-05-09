@@ -1,7 +1,7 @@
 const { Pool, types } = require("pg");
 var config = require("./db-config.js");
 
-config.connectionLimit = 10;
+config.connectionLimit = 10; //config setup stuff
 const connection = new Pool({
   host: config.host,
   user: config.user,
@@ -13,7 +13,7 @@ const connection = new Pool({
   },
 });
 connection.connect((err) => err && console.log(err));
-
+//player routes
 const get_players = async (req, res) => {
   connection.query(
     `SELECT player_id, first_name, last_name, nationality, birth_city, primary_position, birth_date, height_cm FROM players;`,
@@ -39,11 +39,14 @@ const searchPlayers = async (req, res) => {
     conditions.push(`CAST(player_id AS TEXT) LIKE '%${req.query.player_id}%'`);
   }
   if (req.query.name) {
-    conditions.push(`(first_name ILIKE '%${req.query.name}%' OR last_name ILIKE '%${req.query.name}%')`);
-
+    conditions.push(
+      `(first_name ILIKE '%${req.query.name}%' OR last_name ILIKE '%${req.query.name}%')`
+    );
   }
   if (req.query.name) {
-    conditions.push(`(first_name ILIKE '%${req.query.name}%' OR last_name ILIKE '%${req.query.name}%')`);
+    conditions.push(
+      `(first_name ILIKE '%${req.query.name}%' OR last_name ILIKE '%${req.query.name}%')`
+    );
   }
   if (req.query.position) {
     conditions.push(`primary_position ILIKE '%${req.query.position}%'`);
@@ -111,7 +114,7 @@ const getNationalitySummary = async (req, res) => {
 };
 
 // Team Routes
-//query 1
+
 const getTeams = async (req, res) => {
   connection.query(`SELECT team_id, team_name from teams;`, (err, data) => {
     if (err) {
@@ -126,7 +129,6 @@ const getTeams = async (req, res) => {
 const offense_x = async (req, res) => {
   const team_id = req.query.team_id || -1;
   if (team_id == -1) {
-    //all teams
     connection.query(
       `SELECT ge.team_id_for AS team_id, t.team_name, AVG(ge.x) AS avg_x_coordinate
 FROM game_events ge
@@ -164,7 +166,6 @@ GROUP BY ge.team_id_for, t.team_name;
 };
 
 const total_goals = async (req, res) => {
-  //qurry 2
   const team_id = req.query.team_id || -1;
   if (team_id == -1) {
     connection.query(
@@ -214,7 +215,6 @@ GROUP BY t.team_id, t.team_name;`,
 };
 
 const avg_goals = async (req, res) => {
-  //query 3
   const team_id = req.query.team_id || -1;
   if (team_id == -1) {
     connection.query(
@@ -251,7 +251,6 @@ GROUP BY season;
 };
 
 const getRecords = async (req, res) => {
-  //query 4
   const team_id = req.query.team_id || -1;
   const season = req.query.season || -1;
   if (season != -1 && team_id == -1) {
@@ -398,7 +397,6 @@ order by wins desc;`,
 };
 
 const finalToEarlyRatio = async (req, res) => {
-  //query 7
   const team_id = req.query.team_id || -1;
   if (team_id == -1) {
     connection.query(
@@ -454,7 +452,6 @@ ORDER BY final_to_early_ratio DESC;`,
 
 // Game Routes
 const getGames = async (req, res) => {
-  // Query 6: gets all games given the specific query parameters. Handles cases if the parameters are empty
   const season = req.query.season ? parseInt(req.query.season) : null;
   let seasonCondition = "";
   if (season) {
@@ -504,8 +501,9 @@ const getGames = async (req, res) => {
 };
 
 const getShotTypeStats = (req, res) => {
-  // Query 8: get all game events that are shots and goals, then group them by secondaryType to display in table/chart form
-  connection.query(`
+  // Queery 8. get all game events that are shots and goals, then group them by secondaryType to display in table/chart form
+  connection.query(
+    `
     SELECT 
         ge.secondaryType AS shot_type,
         SUM(CASE 
@@ -547,8 +545,8 @@ const getShotTypeStats = (req, res) => {
 };
 
 const getLopsidedGames = (req, res) => {
-  // query 10
-  connection.query(`
+  connection.query(
+    `
     WITH goal_diffs AS (
       SELECT 
         g.*, 
@@ -590,8 +588,10 @@ const getLopsidedGames = (req, res) => {
   );
 };
 
+//one of our 15s queries optimized to 1s
 const getAvgXYExperiencedWinner = (req, res) => {
-  connection.query(`
+  connection.query(
+    `
     WITH player_season_counts AS (
       SELECT player_id
       FROM player_teams
@@ -657,7 +657,7 @@ const getAvgXYExperiencedWinner = (req, res) => {
     }
   );
 };
-
+//the next of our 15s queries optimized to 1s
 const getAggravatedStats = (req, res) => {
   connection.query(
     `SELECT
