@@ -32,7 +32,7 @@ const ShotTypeStats = () => {
 
   // Gets data as page loads
   useEffect(() => {
-    fetch(`http://${config.server_host}:${config.server_port}/shot_types`)
+    fetch(`${config.host}/shot_types`)
       .then((res) => res.json())
       .then((resJson) => setData(resJson.rows))
       .catch(console.error);

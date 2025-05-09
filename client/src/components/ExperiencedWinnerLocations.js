@@ -24,7 +24,7 @@ const ExperiencedWinnerLocations = () => {
 
   // Gets the data from the api key on load
   useEffect(() => {
-    fetch(`http://${config.server_host}:${config.server_port}/exp_winner_xy`)
+    fetch(`${config.host}/exp_winner_xy`)
       .then((res) => res.json())
       .then((data) => setLocations(data.rows))
       .catch((err) => console.error("Error fetching data:", err));
