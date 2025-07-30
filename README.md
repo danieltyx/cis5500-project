@@ -2,8 +2,8 @@
 
 ## Live Demo
 
-Video Demo: https://drive.google.com/file/d/1b8NNYqxzf7Nx9LA1NcDgTMlnce9EfJ8y/view?usp=sharing
-Visit: https://cis5500-project.vercel.app/
+- `Video Demo/`: https://drive.google.com/file/d/1b8NNYqxzf7Nx9LA1NcDgTMlnce9EfJ8y/view?usp=sharing
+- `Visit/`: https://cis5500-project.vercel.app/
 
 ## Project Structure
 
