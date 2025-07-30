@@ -1,4 +1,4 @@
-# CIS5500 Project
+# CIS5500 Project: NHL Game Statistics
 
 ## Live Demo
 
