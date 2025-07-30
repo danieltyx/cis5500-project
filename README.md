@@ -1,8 +1,8 @@
 # CIS5500 Project
 
 ## Live Demo
-
-Visit: https://cis5500-project.vercel.app/
+[Video Demo]([url](https://drive.google.com/file/d/1b8NNYqxzf7Nx9LA1NcDgTMlnce9EfJ8y/view?usp=sharing))
+[Application]([url](https://cis5500-project.vercel.app/))
 
 ## Project Structure
 
